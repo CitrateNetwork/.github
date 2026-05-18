@@ -1,0 +1,57 @@
+# Org-default dependabot config. Repos inherit this unless they
+# carry their own .github/dependabot.yml.
+version: 2
+updates:
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "rust"
+    # Group security updates so we don't get N separate PRs for one
+    # transitive dependency.
+    groups:
+      security:
+        applies-to: security-updates
+        update-types: ["patch", "minor", "major"]
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "javascript"
+    groups:
+      security:
+        applies-to: security-updates
+        update-types: ["patch", "minor", "major"]
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "python"
+    groups:
+      security:
+        applies-to: security-updates
+        update-types: ["patch", "minor", "major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "github-actions"
