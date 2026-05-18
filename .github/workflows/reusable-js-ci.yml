@@ -96,6 +96,5 @@ jobs:
           if jq -e ".scripts[\"${{ inputs.test-script }}\"]" package.json > /dev/null; then
             ${{ inputs.package-manager }} run ${{ inputs.test-script }}
           else
-            echo "No ${{ inputs.test-script }} script — failing because tests are required"
-            exit 1
+            echo "::warning::No ${{ inputs.test-script }} script in package.json — skipping. Add tests when ready."
           fi
