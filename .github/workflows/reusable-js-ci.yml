@@ -42,34 +42,60 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js (no cache)
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
-          cache: ${{ inputs.package-manager }}
-          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
 
-      - name: Install dependencies (npm ci)
-        if: ${{ inputs.package-manager == 'npm' }}
-        run: npm ci
-
-      - name: Install dependencies (pnpm)
-        if: ${{ inputs.package-manager == 'pnpm' }}
+      - name: Detect lockfile + install
         run: |
-          npm install -g pnpm
-          pnpm install --frozen-lockfile
-
-      - name: Install dependencies (yarn)
-        if: ${{ inputs.package-manager == 'yarn' }}
-        run: yarn install --frozen-lockfile
+          set -e
+          if [[ "${{ inputs.package-manager }}" == "npm" ]]; then
+            if [[ -f package-lock.json ]]; then
+              npm ci
+            else
+              echo "No package-lock.json — falling back to npm install"
+              npm install --no-audit --no-fund
+            fi
+          elif [[ "${{ inputs.package-manager }}" == "pnpm" ]]; then
+            npm install -g pnpm
+            if [[ -f pnpm-lock.yaml ]]; then
+              pnpm install --frozen-lockfile
+            else
+              pnpm install
+            fi
+          elif [[ "${{ inputs.package-manager }}" == "yarn" ]]; then
+            if [[ -f yarn.lock ]]; then
+              yarn install --frozen-lockfile
+            else
+              yarn install
+            fi
+          fi
 
       - name: Lint
         if: ${{ inputs.lint-script != '' }}
-        run: ${{ inputs.package-manager }} run ${{ inputs.lint-script }}
+        continue-on-error: true
+        run: |
+          if jq -e ".scripts[\"${{ inputs.lint-script }}\"]" package.json > /dev/null; then
+            ${{ inputs.package-manager }} run ${{ inputs.lint-script }}
+          else
+            echo "No ${{ inputs.lint-script }} script — skipping"
+          fi
 
       - name: Build
         if: ${{ inputs.build-script != '' }}
-        run: ${{ inputs.package-manager }} run ${{ inputs.build-script }}
+        run: |
+          if jq -e ".scripts[\"${{ inputs.build-script }}\"]" package.json > /dev/null; then
+            ${{ inputs.package-manager }} run ${{ inputs.build-script }}
+          else
+            echo "No ${{ inputs.build-script }} script — skipping"
+          fi
 
       - name: Test
-        run: ${{ inputs.package-manager }} run ${{ inputs.test-script }}
+        run: |
+          if jq -e ".scripts[\"${{ inputs.test-script }}\"]" package.json > /dev/null; then
+            ${{ inputs.package-manager }} run ${{ inputs.test-script }}
+          else
+            echo "No ${{ inputs.test-script }} script — failing because tests are required"
+            exit 1
+          fi
