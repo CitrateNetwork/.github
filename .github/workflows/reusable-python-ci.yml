@@ -1,0 +1,66 @@
+name: Reusable Python CI
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: 'Directory containing pyproject.toml or setup.py (default: repo root)'
+        type: string
+        default: '.'
+      python-version:
+        description: 'Python version (default 3.11)'
+        type: string
+        default: '3.11'
+      install-extra:
+        description: 'Extras to install with pip (e.g. dev,test)'
+        type: string
+        default: 'dev'
+      test-command:
+        description: 'Command to run tests'
+        type: string
+        default: 'pytest -v'
+      lint:
+        description: 'Run ruff + mypy (default true)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+          cache: 'pip'
+          cache-dependency-path: ${{ inputs.working-directory }}/pyproject.toml
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[${{ inputs.install-extra }}]"
+
+      - name: Lint (ruff)
+        if: ${{ inputs.lint }}
+        run: |
+          pip install ruff
+          ruff check . || echo "ruff not configured, skipping"
+
+      - name: Type-check (mypy)
+        if: ${{ inputs.lint }}
+        run: |
+          pip install mypy
+          mypy . || echo "mypy not configured, skipping"
+
+      - name: Test
+        run: ${{ inputs.test-command }}

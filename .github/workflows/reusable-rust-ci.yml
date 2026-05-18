@@ -1,0 +1,79 @@
+name: Reusable Rust CI
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: 'Directory containing Cargo.toml (default: repo root)'
+        type: string
+        default: '.'
+      apt-packages:
+        description: 'Extra Ubuntu packages to apt-get install (space-separated)'
+        type: string
+        default: 'libclang-dev cmake libssl-dev pkg-config'
+      test-args:
+        description: 'Extra arguments appended to cargo test'
+        type: string
+        default: '--workspace --locked'
+      clippy:
+        description: 'Run cargo clippy with -D warnings (default true)'
+        type: boolean
+        default: true
+      fmt-check:
+        description: 'Run cargo fmt --check (default true)'
+        type: boolean
+        default: true
+      rust-toolchain:
+        description: 'Rust toolchain (default stable)'
+        type: string
+        default: 'stable'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ inputs.rust-toolchain }}
+          components: clippy,rustfmt
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ inputs.apt-packages }}
+
+      - name: Show toolchain
+        run: rustc -Vv && cargo -V
+
+      - name: Cache cargo registry + git
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: rust-ci-${{ runner.os }}-${{ inputs.rust-toolchain }}-${{ hashFiles(format('{0}/Cargo.lock', inputs.working-directory)) }}
+          restore-keys: rust-ci-${{ runner.os }}-${{ inputs.rust-toolchain }}-
+
+      - name: cargo fmt --check
+        if: ${{ inputs.fmt-check }}
+        run: cargo fmt --all -- --check
+
+      - name: cargo clippy
+        if: ${{ inputs.clippy }}
+        run: cargo clippy --all-targets --locked -- -D warnings
+
+      - name: cargo test
+        env:
+          CARGO_INCREMENTAL: 0
+        run: cargo test ${{ inputs.test-args }}

@@ -1,0 +1,75 @@
+name: Reusable JS/TS CI
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: 'Directory containing package.json (default: repo root)'
+        type: string
+        default: '.'
+      node-version:
+        description: 'Node.js version (default 20)'
+        type: string
+        default: '20'
+      test-script:
+        description: 'npm script to run for tests'
+        type: string
+        default: 'test'
+      build-script:
+        description: 'npm script to run for build (empty to skip)'
+        type: string
+        default: 'build'
+      lint-script:
+        description: 'npm script to run for lint (empty to skip)'
+        type: string
+        default: 'lint'
+      package-manager:
+        description: 'npm | pnpm | yarn (default npm)'
+        type: string
+        default: 'npm'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.package-manager }}
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+      - name: Install dependencies (npm ci)
+        if: ${{ inputs.package-manager == 'npm' }}
+        run: npm ci
+
+      - name: Install dependencies (pnpm)
+        if: ${{ inputs.package-manager == 'pnpm' }}
+        run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
+
+      - name: Install dependencies (yarn)
+        if: ${{ inputs.package-manager == 'yarn' }}
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        if: ${{ inputs.lint-script != '' }}
+        run: ${{ inputs.package-manager }} run ${{ inputs.lint-script }}
+
+      - name: Build
+        if: ${{ inputs.build-script != '' }}
+        run: ${{ inputs.package-manager }} run ${{ inputs.build-script }}
+
+      - name: Test
+        run: ${{ inputs.package-manager }} run ${{ inputs.test-script }}
