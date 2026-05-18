@@ -38,7 +38,7 @@ For security fixes, use `fix(security):` and follow `SECURITY.md`.
 
 ## Sign-off
 
-By submitting a PR, you certify that you wrote or have the right to contribute the code under the project's license. We don't require DCO sign-off in every commit, but for substantive changes to Tier-1 repos, a `Signed-off-by:` line is appreciated.
+By submitting a PR, you certify that you wrote or have the right to contribute the code under the project's license (BUSL-1.1 unless a repo carries a different LICENSE). We don't require DCO sign-off in every commit, but for substantive changes to Tier-1 repos, a `Signed-off-by:` line is appreciated.
 
 ## Bringing changes upstream
 
