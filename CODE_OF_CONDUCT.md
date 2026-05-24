@@ -22,9 +22,9 @@ We will not tolerate:
 
 ## Reporting
 
-Conduct concerns: **conduct@citrate.network**. We acknowledge within 5 business days.
+Conduct concerns: **conduct@citrate.ai**. We acknowledge within 5 business days.
 
-Security concerns: see [`SECURITY.md`](SECURITY.md), use security@citrate.network.
+Security concerns: see [`SECURITY.md`](SECURITY.md), use security@citrate.ai.
 
 ## Enforcement
 
@@ -34,7 +34,7 @@ Project maintainers will:
 2. **Temp-ban** — for repeated or moderate-severity violations. 7-30 days from project spaces.
 3. **Ban** — for severe or sustained violations. Permanent removal from project spaces.
 
-Maintainer enforcement decisions are reviewable by the federation lead. Disagreements about enforcement go to conduct@citrate.network with a `[REVIEW]` subject tag.
+Maintainer enforcement decisions are reviewable by the federation lead. Disagreements about enforcement go to conduct@citrate.ai with a `[REVIEW]` subject tag.
 
 ## Attribution
 

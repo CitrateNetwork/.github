@@ -52,5 +52,5 @@ The chain and SDKs may receive forks/clones. If you're upstreaming work from a f
 
 - **GitHub Discussions** for that specific repo (preferred for code questions).
 - **Discord** invite in the org README for community/sync conversations.
-- **conduct@citrate.network** for conduct concerns.
-- **security@citrate.network** for vulnerabilities (see `SECURITY.md`).
+- **conduct@citrate.ai** for conduct concerns.
+- **security@citrate.ai** for vulnerabilities (see `SECURITY.md`).

@@ -6,7 +6,7 @@ This document covers all repositories under the [`CitrateNetwork`](https://githu
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Email: **security@citrate.network** (PGP key: see `keys/security@citrate.network.asc` in the [`citrate-monorepo-archive`](https://github.com/CitrateNetwork/citrate-monorepo-archive) repo). Encrypt anything sensitive.
+Email: **security@citrate.ai** (PGP key: see `keys/security@citrate.ai.asc` in the [`citrate-monorepo-archive`](https://github.com/CitrateNetwork/citrate-monorepo-archive) repo). Encrypt anything sensitive.
 
 Include in your report:
 - The repo + commit SHA (or version tag) where you observed the issue
@@ -69,6 +69,6 @@ Per-repo audit history lives in each repo's `audits/` directory (when present) o
 
 ## Contact
 
-- Vulnerability reports: security@citrate.network
+- Vulnerability reports: security@citrate.ai
 - Press/disclosure coordination: same address; tag `[PRESS]` in the subject.
 - General questions: open a GitHub Discussion in the relevant repo.

@@ -264,10 +264,10 @@ see [`docs/PRIVATE_NETWORK.md`](https://github.com/CitrateNetwork/citrate-labs/b
 |---|---|
 | Network name | Citrate Testnet |
 | Chain ID | (TBA — see `docs/PUBLIC_TESTNET.md`) |
-| RPC URL | `https://rpc.testnet.citrate.network` |
-| WebSocket | `wss://ws.testnet.citrate.network` |
-| Block explorer | `https://explorer.testnet.citrate.network` |
-| Faucet | `https://faucet.testnet.citrate.network` |
+| RPC URL | `https://rpc.testnet.citrate.ai` |
+| WebSocket | `wss://ws.testnet.citrate.ai` |
+| Block explorer | `https://explorer.testnet.citrate.ai` |
+| Faucet | `https://faucet.testnet.citrate.ai` |
 | Chain spec | `citrate-chain/specs/testnet.toml` |
 
 #### Run a syncing node against the testnet
@@ -289,10 +289,10 @@ For the desktop wallet, browser extension, or any wallet that speaks JSON-RPC:
 
 ```
 Network name: Citrate Testnet
-RPC URL:      https://rpc.testnet.citrate.network
+RPC URL:      https://rpc.testnet.citrate.ai
 Chain ID:     (see docs/PUBLIC_TESTNET.md)
 Symbol:       tCTR
-Explorer:     https://explorer.testnet.citrate.network
+Explorer:     https://explorer.testnet.citrate.ai
 ```
 
 Request testnet funds at the faucet (one drip per address per day).
@@ -303,14 +303,14 @@ Request testnet funds at the faucet (one drip per address per day).
 cd citrate-chain/contracts
 forge build
 forge create src/MyContract.sol:MyContract \
-    --rpc-url https://rpc.testnet.citrate.network \
+    --rpc-url https://rpc.testnet.citrate.ai \
     --private-key $TESTNET_DEPLOYER_KEY
 ```
 
 #### Hit the inference gateway
 
 ```bash
-curl -s https://gateway.testnet.citrate.network/v1/chat/completions \
+curl -s https://gateway.testnet.citrate.ai/v1/chat/completions \
     -H "Authorization: Bearer $TESTNET_API_KEY" \
     -H "Content-Type: application/json" \
     -d '{"model":"citrate-mcp/llama-3.1-8b","messages":[{"role":"user","content":"hello"}]}'
@@ -349,7 +349,7 @@ TypeScript:
 ```ts
 import { CitrateClient } from "@citratenetwork/sdk";
 
-const client = new CitrateClient({ rpcUrl: "https://rpc.testnet.citrate.network" });
+const client = new CitrateClient({ rpcUrl: "https://rpc.testnet.citrate.ai" });
 const head = await client.chain.head();
 console.log("latest DAG tip:", head);
 ```
@@ -359,7 +359,7 @@ Python:
 ```python
 from citrate_sdk import CitrateClient
 
-client = CitrateClient(rpc_url="https://rpc.testnet.citrate.network")
+client = CitrateClient(rpc_url="https://rpc.testnet.citrate.ai")
 print("latest DAG tip:", client.chain.head())
 ```
 
