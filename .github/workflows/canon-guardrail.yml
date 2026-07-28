@@ -1,0 +1,21 @@
+name: Canon guardrail
+
+# The .github repo hosts the shared guardrail and self-checks with its local copy
+# (no cross-repo fetch needed here).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guardrail:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enforce retired-claim canon (CC-1)
+        run: bash scripts/canon-guardrail.sh .

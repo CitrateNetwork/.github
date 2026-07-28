@@ -1,0 +1,34 @@
+name: Reusable canon guardrail
+
+# CC-1 (planset 2026-07-27-canonicalization-conversion, WS-2). A federation-wide
+# gate that keeps retired claims off public surfaces:
+#   D-CC-2  no named identity vendor (CLEAR / Sumsub) — say "in-house VERI"
+#   D-CC-3  no 773K throughput figure — say "5,000 TPS sustained, 10,000 ceiling"
+#   D-CC-4  no veteran-owned / SDVOSB business-status claim
+# Scans prose AND package/repo metadata (package.json, Cargo.toml, pyproject.toml,
+# npm keywords, meta/OG/JSON-LD) — the class that leaked "veteran-owned" once.
+# Allowlist: journals/.agentile/REGISTRY/PLANSET/redteam paths, and any line with
+# a `canon-allow` marker.
+
+on:
+  workflow_call: {}
+
+permissions:
+  contents: read
+
+jobs:
+  guardrail:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the calling repository
+        uses: actions/checkout@v4
+      - name: Fetch the shared guardrail script
+        uses: actions/checkout@v4
+        with:
+          repository: CitrateNetwork/.github
+          ref: main
+          path: .canon-guardrail
+      - name: Enforce retired-claim canon (CC-1)
+        run: bash .canon-guardrail/scripts/canon-guardrail.sh .
