@@ -78,7 +78,7 @@ Citrate-Labs/                              ← parent meta-repo
 ├── citrate-agent-runtime/                 agent execution runtime
 ├── citrate-simulation/                    network simulation tooling
 │
-├── citrate-sdk-js/                        @citratenetwork/sdk (TypeScript)
+├── citrate-sdk-js/                        @citratelabs/sdk (TypeScript)
 ├── citrate-sdk-python/                    Python SDK
 ├── citrate-sdk-marketplace/               marketplace SDK
 │
@@ -336,9 +336,9 @@ map:
 | [`citrate-compute-pool`](https://github.com/CitrateNetwork/citrate-compute-pool) | Training pool coordinator | `cargo run --release` |
 | [`citrate-agent-runtime`](https://github.com/CitrateNetwork/citrate-agent-runtime) | Agent runtime | `cargo run --release` |
 | [`citrate-simulation`](https://github.com/CitrateNetwork/citrate-simulation) | Network simulator | `cargo run --release` |
-| [`citrate-sdk-js`](https://github.com/CitrateNetwork/citrate-sdk-js) | `@citratenetwork/sdk` | `pnpm install && pnpm build` |
+| [`citrate-sdk-js`](https://github.com/CitrateNetwork/citrate-sdk-js) | `@citratelabs/sdk` | `pnpm install && pnpm build` |
 | [`citrate-sdk-python`](https://github.com/CitrateNetwork/citrate-sdk-python) | `citrate-sdk` (PyPI) | `pip install -e .` |
-| [`citrate-sdk-marketplace`](https://github.com/CitrateNetwork/citrate-sdk-marketplace) | `@citratenetwork/marketplace-sdk` | `pnpm install && pnpm build` |
+| [`citrate-sdk-marketplace`](https://github.com/CitrateNetwork/citrate-sdk-marketplace) | `@citratelabs/marketplace-sdk` | `pnpm install && pnpm build` |
 | [`citrate-docs`](https://github.com/CitrateNetwork/citrate-docs) | Docs site | `pnpm install && pnpm dev` |
 | [`citrate-boeing-shell`](https://github.com/CitrateNetwork/citrate-boeing-shell) | Federated shell client | `cargo run --release` |
 
@@ -347,7 +347,7 @@ map:
 TypeScript:
 
 ```ts
-import { CitrateClient } from "@citratenetwork/sdk";
+import { CitrateClient } from "@citratelabs/sdk";
 
 const client = new CitrateClient({ rpcUrl: "https://rpc.testnet.citrate.ai" });
 const head = await client.chain.head();

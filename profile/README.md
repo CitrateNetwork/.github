@@ -6,15 +6,23 @@
 
 This GitHub organization hosts the federated repositories that make up the Citrate Network. The codebase was originally developed as a monorepo (now preserved as [`citrate-monorepo-archive`](https://github.com/citratenetwork/citrate-monorepo-archive)) and split in May 2026 to enable per-component release cadences and independent audits.
 
+## Open source and access
+
+Citrate is built to be open. The whole chain and application layer are open sourced before mainnet, in January 2027. Until then, access to the core is deliberate, and that is a security decision, not secrecy: we research in private and open source a component once it has third-party validation behind it, from auditors or independent researchers.
+
+**Public now** — read and reproduce them: [`nat`](https://github.com/CitrateNetwork/nat) (the model architecture), the American Learning Federation, and [`agentile-skills`](https://github.com/CitrateNetwork/agentile-skills) (the engineering methodology).
+
+**Everything else is access-by-request.** Approved contributors receive privileged access to every repository except the private repositories of clients and employees. Request access at [citrate.ai/contact](https://citrate.ai/contact) or email `hello@citrate.ai`. Full policy: [docs.citrate.ai/start/open-source](https://docs.citrate.ai/start/open-source).
+
 ## Repository index
 
 ### Core chain
 
-- **`citrate-chain`** — The blockchain: consensus, execution, networking, RPC, contracts, node, CLI, wallet. Publishes 4 chain crates to crates.io.
+- **`citrate-chain`** — The blockchain: consensus, execution, networking, RPC, contracts, node, CLI, wallet. Chain crates publish to crates.io (rollout in progress).
 
 ### Client applications
 
-- **`citrate-gui-native`** — Slint-native desktop wallet and DAG explorer
+- **`citrate-native`** — light-node desktop wallet and DAG explorer
 - **`citrate-learning-center`** — School pilot desktop application
 - **`citrate-wallet-extension`** — Browser wallet extension
 - **`citrate-buyer-webapp`** — Buyer-side marketplace web application
@@ -28,7 +36,7 @@ This GitHub organization hosts the federated repositories that make up the Citra
 
 ### SDKs
 
-- **`citrate-sdk-js`** — TypeScript SDK (`@citratenetwork/sdk`)
+- **`citrate-sdk-js`** — TypeScript SDK (`@citratelabs/sdk`)
 - **`citrate-sdk-marketplace`** — Marketplace SDK
 - **`citrate-sdk-python`** — Python SDK
 - **`citrate-edu-sdk`** — Learning Center SDK
