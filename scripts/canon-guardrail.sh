@@ -10,6 +10,8 @@
 #           microbench figure is retired from public surfaces.
 #   D-CC-4  No veteran-owned / SDVOSB / VOSB / service-disabled business-status
 #           claim anywhere (dilution across partners disqualifies it).
+#   D-CC-1  No retired per-device earnings range ("$120 to $2,400"). The offer is
+#           Free / Pilot $48 / Enterprise, with no earnings promise.
 #
 # This is a SEPARATE check from disclaimer-check.sh: that one requires a claim to
 # co-occur with a disclaimer; this one forbids a token from appearing at all.
@@ -23,11 +25,6 @@
 # output, this script) are skipped, and any single line carrying the marker
 # `canon-allow` is skipped, so a doc that legitimately quotes a retired term to
 # explain THIS policy does not trip the gate.
-#
-# NOTE (CC-3): the retired earnings range ("$120 to $2,400 / device") is NOT yet
-# enforced here. citrate-landing still shows it until CC-3 canonicalizes the offer
-# to Free / Pilot / Enterprise; the EARNINGS pattern is added by CC-3 once that
-# surface is clean, to avoid reddening the build before the fix lands.
 
 set -uo pipefail
 TARGET="${1:-.}"
@@ -83,6 +80,7 @@ scan() { # $1=label  $2=grep-flags  $3=ERE
 scan VENDOR     '-E'  '\bCLEAR\b|Sumsub'
 scan THROUGHPUT '-nE' '773,?000|773[Kk]\b|773[[:space:]]*(tx|[Tt][Pp][Ss])'
 scan STATUS     '-inE' 'veteran[- ]owned|\bSDVOSB\b|\bVOSB\b|service-disabled|service disabled'
+scan EARNINGS   '-nE' '\$120[[:space:]]*(to|-|–|—)[[:space:]]*\$?2,?400|\$2,?400[[:space:]]*(per|/)[[:space:]]*(device|machine)'
 
 if [ "${#HITS[@]}" -gt 0 ]; then
   echo "FAIL: retired claim(s) found on a public surface (canon guardrail, CC-1):"
@@ -92,6 +90,7 @@ if [ "${#HITS[@]}" -gt 0 ]; then
   echo "  VENDOR      D-CC-2 — say \"Citrate's in-house verification (VERI)\", never CLEAR/Sumsub."
   echo "  THROUGHPUT  D-CC-3 — say \"5,000 TPS sustained, 10,000 ceiling\", not 773K."
   echo "  STATUS      D-CC-4 — no veteran-owned / SDVOSB claim (cap-table dilution disqualifies)."
+  echo "  EARNINGS    D-CC-1 — offer is Free / Pilot \$48 / Enterprise; no \$120-\$2,400 earnings promise."
   echo
   echo "If a hit is a legitimate historical reference (e.g. a doc explaining this"
   echo "policy), add 'canon-allow' to that line, or add the path to EXCLUDES."
