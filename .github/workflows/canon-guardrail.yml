@@ -16,6 +16,6 @@ jobs:
   guardrail:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Enforce retired-claim canon (CC-1)
         run: bash scripts/canon-guardrail.sh .
