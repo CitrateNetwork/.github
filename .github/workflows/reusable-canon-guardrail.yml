@@ -24,11 +24,19 @@ jobs:
     steps:
       - name: Check out the calling repository
         uses: actions/checkout@v4
+        with:
+          # GH-B-003: the fetched foreign script runs against this checkout; do
+          # not leave the caller's token in .git/config for it to reach.
+          persist-credentials: false
       - name: Fetch the shared guardrail script
         uses: actions/checkout@v4
         with:
           repository: CitrateNetwork/.github
-          ref: main
+          # GH-B-003: was `ref: main` — a mutable branch, so any push to this
+          # repo's main immediately changed what executes in every caller's CI,
+          # with no diff in the caller and no required review (main is
+          # unprotected). Pinned to the audited-good commit; bump deliberately.
+          ref: 0ea7a80a7f2e385cf0a74f5a56116caa06a3966b
           path: .canon-guardrail
       - name: Enforce retired-claim canon (CC-1)
         run: bash .canon-guardrail/scripts/canon-guardrail.sh .

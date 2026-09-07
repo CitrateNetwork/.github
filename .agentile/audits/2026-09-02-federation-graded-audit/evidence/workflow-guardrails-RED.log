@@ -1,0 +1,11 @@
+### RED — FINAL tripwire vs pinned pre-fix tree (0ea7a80a) ###
+FAIL[C1]: workflow with an 'on:'/'workflow_call:' trigger outside .github/workflows/: ./workflows/dep-cve-gate.yml (GitHub will never run it)
+FAIL[C1]: workflow with an 'on:'/'workflow_call:' trigger outside .github/workflows/: ./workflows/secret-scan.yml (GitHub will never run it)
+FAIL[C2]: exit-code swallow ('|| echo' / '|| true') in ./.github/workflows/reusable-python-ci.yml:57
+FAIL[C2]: exit-code swallow ('|| echo' / '|| true') in ./.github/workflows/reusable-python-ci.yml:63
+FAIL[C2]: continue-on-error:true (fail-open gate) in ./.github/workflows/reusable-js-ci.yml:77
+FAIL[C3]: action/workflow pinned to mutable branch '@master' in ./.github/workflows/reusable-rust-ci.yml:46 (pin a tag or full SHA)
+FAIL[C3]: cross-repo 'ref:' on a mutable branch in ./.github/workflows/reusable-canon-guardrail.yml:31 (pin a full SHA)
+---
+workflow-guardrails: FAIL — see the FAIL[...] lines above.
+EXIT=1 (non-zero = tripwire fires, as required)

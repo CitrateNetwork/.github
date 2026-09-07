@@ -480,10 +480,18 @@ Commercial, production, institutional, and partnership use inquiries:
 
 | Workflow | Purpose | Notable inputs |
 |---|---|---|
-| `reusable-rust-ci.yml` | cargo fmt, clippy, test | `working-directory`, `apt-packages`, `test-args` |
+| `reusable-rust-ci.yml` | cargo fmt, clippy, test, **cargo-audit** | `working-directory`, `apt-packages`, `test-args`, `dep-audit` |
 | `reusable-solidity-ci.yml` | forge build + test, optional Slither | `working-directory`, `run-slither` |
-| `reusable-js-ci.yml` | npm/pnpm/yarn install + lint + build + test | `working-directory`, `package-manager`, `node-version` |
-| `reusable-python-ci.yml` | pip install + ruff + mypy + pytest | `working-directory`, `python-version`, `install-extra` |
+| `reusable-js-ci.yml` | npm/pnpm/yarn install + lint + build + test, **audit** | `working-directory`, `package-manager`, `node-version`, `dep-audit` |
+| `reusable-python-ci.yml` | pip install + ruff + mypy + pytest, **pip-audit** | `working-directory`, `python-version`, `install-extra`, `dep-audit` |
+| `reusable-canon-guardrail.yml` | retired-claim canon gate (CC-1) | *(none)* |
+| `reusable-secret-scan.yml` | blocking gitleaks secret scan | `gitleaks-version`, `gitleaks-sha256` |
+
+The dependency-CVE gate (`dep-audit`, on by every language pipeline) and the
+secret scan (`reusable-secret-scan.yml`) were formerly two standalone files under
+a repo-root `workflows/` directory that GitHub never dispatched; they are now
+inherited by every caller. Lint / build / test steps are **blocking** — to skip
+one, pass an empty script input deliberately, never a hidden `continue-on-error`.
 
 ### Calling from a repo
 
@@ -498,11 +506,11 @@ on:
 jobs:
   rust:
     if: hashFiles('Cargo.toml') != ''
-    uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@main
+    uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@v1   # pin a tag or SHA, not @main
 
   js:
     if: hashFiles('package.json') != ''
-    uses: citratenetwork/.github/.github/workflows/reusable-js-ci.yml@main
+    uses: citratenetwork/.github/.github/workflows/reusable-js-ci.yml@v1   # pin a tag or SHA, not @main
 ```
 
 ### Release notifications
@@ -511,10 +519,14 @@ No Discord webhook is wired in (per Saul, 2026-05-17 split decisions). To add on
 
 ### Versioning
 
-Reusable workflows pin to `@main` by default. For tagged stability, repos can pin to a SHA or a release tag:
+**Pin callers to a release tag or a full commit SHA — never `@main`** (GH-B-003).
+`@main` is a mutable branch: a single push to this repo (whose `main` has no
+required review) instantly changes what runs in every consuming repo's CI, with
+no diff for a caller's reviewer to see. Pin to a tag or SHA so an upgrade is a
+reviewable change in the caller:
 
 ```yaml
-uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@v1
+uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@v1   # or @<40-hex-sha>
 ```
 
 When breaking-change updates are made, cut a new tag here so consumer repos can pin against it.

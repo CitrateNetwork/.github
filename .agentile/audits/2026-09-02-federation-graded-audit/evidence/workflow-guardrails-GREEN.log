@@ -1,0 +1,3 @@
+### GREEN — FINAL tripwire vs fixed tree ###
+workflow-guardrails: PASS
+EXIT=0 (zero = clean)
