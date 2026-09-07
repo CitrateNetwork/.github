@@ -1,5 +1,13 @@
-# Org-default dependabot config. Repos inherit this unless they
-# carry their own .github/dependabot.yml.
+# Org-default dependabot TEMPLATE. GH-B-007 / DGH-004: GitHub does NOT inherit
+# Dependabot version-update config from the org `.github` repo — the comment that
+# used to claim "repos inherit this" was false, and at the repo root this file
+# configures nothing (Dependabot reads only `.github/dependabot.yml`, per repo).
+#
+# This file is kept as the canonical template to COPY into each repo that has a
+# matching ecosystem, as `.github/dependabot.yml`. This repo's own live config is
+# `.github/dependabot.yml` (github-actions only — its real dependency surface).
+# For a genuinely org-wide control, enable organisation-level Dependabot alerts +
+# security updates in org settings (that needs no per-repo file).
 version: 2
 updates:
   - package-ecosystem: "cargo"

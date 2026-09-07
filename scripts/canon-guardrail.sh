@@ -73,7 +73,17 @@ scan() { # $1=label  $2=grep-flags  $3=ERE
       --include='*.ts' --include='*.tsx' --include='*.js' --include='*.jsx' --include='*.mjs' \
       --include='*.json' --include='*.toml' \
       . 2>/dev/null \
-    | grep -vE "$EXCLUDE_PATTERN" \
+    | awk -v ex="$EXCLUDE_PATTERN" '
+        # GH-B-009: apply the exclusion allowlist to the PATH FIELD ONLY, not to
+        # the whole "path:lineno:content" line grep prints. Filtering the full line
+        # let any of ~20 exclusion tokens (citrate-journals, /handoffs/,
+        # canon-guardrail ...) suppress a REAL retired-claim hit merely by
+        # co-occurring in the prose  a one-token bypass of the gate. Same
+        # over-broad-suppression class the org already fixed once in secret-scan
+        # (BV-X-01); the fix is to scope suppression to the path. grep output is
+        # path:lineno:content, so the path is everything before the first :digits:.
+        { if (match($0, /^[^:]*:[0-9]+:/)) p = substr($0, 1, RLENGTH); else p = $0
+          if (p !~ ex) print }' \
     | { [ "$label" = "VENDOR" ] && grep -vE 'cleartext' || cat; })
 }
 

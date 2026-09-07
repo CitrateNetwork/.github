@@ -77,6 +77,31 @@ for f in $WF; do
   done < <(scan '^[[:space:]]*ref:[[:space:]]*(master|main|develop|trunk|stable|nightly)[[:space:]]*$' "$f")
 done
 
+# ── C4  ${{ }} interpolation inside a run: body (template injection) ───────────
+# GH-B-005 / DGH-005: GitHub expands ${{ }} into the shell SCRIPT text BEFORE the
+# shell runs, so an `inputs.*` or `github.event.*` value that lands in a `run:`
+# body is executed as code, not read as data — a caller (or a caller that forwards
+# untrusted PR data into an input) gets shell injection. The fix is to pass the
+# value through `env:` and reference it as a quoted shell variable, which the
+# shell then treats as data. This check fails on any ${{ … }} inside a run: body.
+for f in $WF; do
+  while IFS= read -r ln; do
+    note C4 "\${{ }} expansion inside a run: body in $f:$ln (route the value through env: and reference \"\$VAR\")"
+  done < <(awk '
+    function indent(s,   i){ i=match(s, /[^ ]/); return (i? i-1 : length(s)) }
+    {
+      line=$0
+      if (line ~ /^[[:space:]]*#/) next
+      if (in_run) {
+        if (line ~ /[^[:space:]]/ && indent(line) <= run_indent) { in_run=0 }
+        else { if (line ~ /\$\{\{/) print NR; next }
+      }
+      if (line ~ /^[[:space:]]*run:[[:space:]]*[|>]/) { in_run=1; run_indent=indent(line); next }
+      if (line ~ /^[[:space:]]*run:[[:space:]]*[^|>[:space:]]/ && line ~ /\$\{\{/) print NR
+    }
+  ' "$f")
+done
+
 if [ "$FAIL" -ne 0 ]; then
   echo "---"
   echo "workflow-guardrails: FAIL — see the FAIL[...] lines above."

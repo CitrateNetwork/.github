@@ -49,7 +49,7 @@ Tier-1 repos additionally carry:
 Reusable workflows live in [`CitrateNetwork/.github/.github/workflows/`](https://github.com/CitrateNetwork/.github/tree/main/.github/workflows):
 
 - `reusable-rust-ci.yml` — cargo fmt, clippy, test
-- `reusable-solidity-ci.yml` — forge build + test, optional Slither
+- `reusable-solidity-ci.yml` — forge build + test + Slither (default on)
 - `reusable-js-ci.yml` — install + build + test + lint with graceful no-script handling
 - `reusable-python-ci.yml` — pip install + ruff + mypy + pytest
 

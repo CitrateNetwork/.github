@@ -57,7 +57,7 @@ Citrate is built to be open. The whole chain and application layer are open sour
 Repos in this org consume reusable CI workflows from this `.github` repo:
 
 - `reusable-rust-ci.yml` — Rust build, test, clippy, fmt
-- `reusable-solidity-ci.yml` — Foundry test + optional Slither
+- `reusable-solidity-ci.yml` — Foundry build + test + Slither (default on)
 - `reusable-js-ci.yml` — npm/pnpm/yarn install, build, test, lint
 - `reusable-python-ci.yml` — pip install, pytest, ruff, mypy
 
@@ -66,7 +66,9 @@ Usage in any repo's `.github/workflows/ci.yml`:
 ```yaml
 jobs:
   rust:
-    uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@main
+    # GH-B-003: pin to a release tag or a full commit SHA, never @main (a mutable
+    # branch: one push to this repo would change every caller's CI with no diff).
+    uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@v1
     with:
       working-directory: '.'
       apt-packages: 'libclang-dev cmake libssl-dev pkg-config libfontconfig1-dev'
