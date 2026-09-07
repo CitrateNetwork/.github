@@ -1,0 +1,26 @@
+name: CI
+
+# The org-defaults repo now self-checks: its own workflows must pass the
+# workflow-guardrails tripwire (GH-B-001/002/003/004). A red run here is the
+# signal that a misplaced gate, a fail-open step, or a mutable-branch pin has
+# been re-introduced into the templates 46 repos inherit.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-guardrails:
+    name: workflow guardrails (RM-Q tripwire)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run workflow-guardrails
+        run: bash scripts/ci/workflow-guardrails.sh .

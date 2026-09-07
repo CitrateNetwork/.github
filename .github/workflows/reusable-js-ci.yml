@@ -27,6 +27,10 @@ on:
         description: 'npm | pnpm | yarn (default npm)'
         type: string
         default: 'npm'
+      dep-audit:
+        description: 'Run a blocking dependency-CVE audit (high+; default true)'
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -72,14 +76,18 @@ jobs:
             fi
           fi
 
+      # GH-B-002: lint is a BLOCKING gate. To opt out, a caller passes
+      # `lint-script: ''` in its `with:` block — a visible, reviewable choice —
+      # never a hidden continue-on-error. A named-but-missing script is an error,
+      # not a silent skip (no more "green badge over nothing").
       - name: Lint
         if: ${{ inputs.lint-script != '' }}
-        continue-on-error: true
         run: |
           if jq -e ".scripts[\"${{ inputs.lint-script }}\"]" package.json > /dev/null; then
             ${{ inputs.package-manager }} run ${{ inputs.lint-script }}
           else
-            echo "No ${{ inputs.lint-script }} script — skipping"
+            echo "::error::lint-script '${{ inputs.lint-script }}' not found in package.json. Add it, or pass lint-script: '' to opt out."
+            exit 1
           fi
 
       - name: Build
@@ -88,13 +96,28 @@ jobs:
           if jq -e ".scripts[\"${{ inputs.build-script }}\"]" package.json > /dev/null; then
             ${{ inputs.package-manager }} run ${{ inputs.build-script }}
           else
-            echo "No ${{ inputs.build-script }} script — skipping"
+            echo "::error::build-script '${{ inputs.build-script }}' not found in package.json. Add it, or pass build-script: '' to opt out."
+            exit 1
           fi
 
       - name: Test
+        if: ${{ inputs.test-script != '' }}
         run: |
           if jq -e ".scripts[\"${{ inputs.test-script }}\"]" package.json > /dev/null; then
             ${{ inputs.package-manager }} run ${{ inputs.test-script }}
           else
-            echo "::warning::No ${{ inputs.test-script }} script in package.json — skipping. Add tests when ready."
+            echo "::error::test-script '${{ inputs.test-script }}' not found in package.json. Add tests, or pass test-script: '' to opt out deliberately."
+            exit 1
           fi
+
+      # GH-B-001 / DGH-001 / FWA-X2: the blocking dependency-CVE gate, re-homed
+      # from the inert `workflows/dep-cve-gate.yml` to where the JS code is.
+      # Fails on any advisory at high or above against what ships to consumers.
+      - name: Dependency audit (blocking, high+)
+        if: ${{ inputs.dep-audit }}
+        run: |
+          case "${{ inputs.package-manager }}" in
+            npm)  npm audit --audit-level=high --omit=dev ;;
+            pnpm) pnpm audit --audit-level high --prod ;;
+            yarn) yarn audit --level high --groups dependencies ;;
+          esac
