@@ -1,0 +1,22 @@
+# GH-B-007 / DGH-004: THIS is the location Dependabot actually reads
+# (`.github/dependabot.yml`, per repo). The template at the repo root was believed
+# to be inherited org-wide — GitHub provides no such inheritance for Dependabot
+# version-update config, so nothing configured Dependabot here, including for this
+# repo's own action pins. This repo's only dependency surface is the GitHub
+# Actions referenced by its workflows; keeping those bumped is also the maintenance
+# path for the SHA-pinning sweep (DGH-002 / DGH-003).
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      actions:
+        applies-to: version-updates
+        update-types: ["patch", "minor", "major"]
