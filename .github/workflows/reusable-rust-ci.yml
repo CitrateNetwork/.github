@@ -44,7 +44,7 @@ jobs:
       run:
         working-directory: ${{ inputs.working-directory }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Rust toolchain
         # GH-B-004 / DGH-002: was `@master` (a dev branch — silently movable, and
@@ -72,7 +72,7 @@ jobs:
         run: rustc -Vv && cargo -V
 
       - name: Cache cargo registry + git
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry
