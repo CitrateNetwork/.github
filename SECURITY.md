@@ -6,7 +6,11 @@ This document covers all repositories under the [`CitrateNetwork`](https://githu
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Email: **security@citrate.ai** (PGP key: see `keys/security@citrate.ai.asc` in the [`citrate-monorepo-archive`](https://github.com/CitrateNetwork/citrate-monorepo-archive) repo). Encrypt anything sensitive.
+Preferred (encrypted, no key exchange): use **GitHub private vulnerability reporting** — on the affected repository, open the **Security** tab → **Report a vulnerability**. This gives a private, GitHub-encrypted channel with no PGP key to fetch.
+
+Alternatively, email **security@citrate.ai**. If you need to encrypt an emailed report, request our current PGP public key at that address, or fetch it from `keys.openpgp.org` for `security@citrate.ai`.
+
+> GH-B-012: the previous PGP path pointed at `keys/security@citrate.ai.asc` in the **private** `citrate-monorepo-archive` repo, which no external reporter can read — the documented encryption path did not work. Use private vulnerability reporting instead.
 
 Include in your report:
 - The repo + commit SHA (or version tag) where you observed the issue

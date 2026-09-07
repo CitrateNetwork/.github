@@ -8,7 +8,7 @@
 >
 > What's *only* in this repo:
 > - `profile/README.md` — the landing page rendered on https://github.com/citratenetwork
-> - `.github/workflows/reusable-*.yml` — reusable CI workflows consumed by every org repo
+> - `.github/workflows/reusable-*.yml` — reusable CI workflows available for every org repo to call
 > - `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `AUDIT_POSTURE.md`, `dependabot.yml` — org defaults
 >
 > See [§ Org-level CI infrastructure](#org-level-ci-infrastructure) at the bottom for the CI details.
@@ -115,9 +115,14 @@ Quick install (Debian/Ubuntu):
 ```bash
 sudo apt-get install -y build-essential pkg-config libssl-dev libclang-dev cmake \
                         libfontconfig1-dev libxkbcommon-dev libwayland-dev git
+# GH-B-010: these are the upstream projects' own documented installers, which
+# the org does not verify. At minimum force HTTPS + TLS 1.2 (as rustup does) so a
+# protocol-downgrade or plaintext-redirect cannot feed a substituted script into
+# your shell. For a hardened setup, download to a file, verify the published
+# checksum/signature, then run — foundryup and fnm both publish release checksums.
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-curl -L https://foundry.paradigm.xyz | bash && foundryup
-curl -fsSL https://fnm.vercel.app/install | bash && fnm install --lts && fnm use lts
+curl --proto '=https' --tlsv1.2 -L https://foundry.paradigm.xyz | bash && foundryup
+curl --proto '=https' --tlsv1.2 -fsSL https://fnm.vercel.app/install | bash && fnm install --lts && fnm use lts
 corepack enable pnpm
 ```
 
@@ -474,14 +479,16 @@ Commercial, production, institutional, and partnership use inquiries:
 ## Org-level CI infrastructure
 
 > This section is **only** in this repo (`CitrateNetwork/.github`) — it documents the
-> reusable workflows consumed by every other org repo.
+> reusable workflows that every other org repo can call (adoption is opt-in per repo,
+> not automatic). The repo also self-checks via `ci.yml` (workflow-guardrails +
+> canon-guardrail regression) and `canon-guardrail.yml`.
 
 ### Reusable workflows
 
 | Workflow | Purpose | Notable inputs |
 |---|---|---|
 | `reusable-rust-ci.yml` | cargo fmt, clippy, test, **cargo-audit** | `working-directory`, `apt-packages`, `test-args`, `dep-audit` |
-| `reusable-solidity-ci.yml` | forge build + test, optional Slither | `working-directory`, `run-slither` |
+| `reusable-solidity-ci.yml` | forge build + test + **Slither (default on)** | `working-directory`, `run-slither` (default `true`) |
 | `reusable-js-ci.yml` | npm/pnpm/yarn install + lint + build + test, **audit** | `working-directory`, `package-manager`, `node-version`, `dep-audit` |
 | `reusable-python-ci.yml` | pip install + ruff + mypy + pytest, **pip-audit** | `working-directory`, `python-version`, `install-extra`, `dep-audit` |
 | `reusable-canon-guardrail.yml` | retired-claim canon gate (CC-1) | *(none)* |
