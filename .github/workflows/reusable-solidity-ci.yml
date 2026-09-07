@@ -16,9 +16,14 @@ on:
         type: string
         default: '@openzeppelin/=lib/openzeppelin-contracts/'
       run-slither:
-        description: 'Run Slither static analysis (default false; expensive)'
+        # GH-B-006: was `default: false`, so a caller adopting the three-line shim
+        # without reading the input list got `forge test` and NO static analysis on
+        # a Layer-1 blockchain codebase. A security gate must be the default, not an
+        # opt-in. Callers that genuinely cannot afford it per-push opt out visibly
+        # with `run-slither: false` (e.g. gate it to pull_request in their shim).
+        description: 'Run Slither static analysis (default true)'
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: read
@@ -48,7 +53,10 @@ jobs:
         run: forge build --sizes
 
       - name: Forge test
-        run: forge test ${{ inputs.forge-test-args }}
+        # GH-B-005 / DGH-005: forge-test-args via env: (shell data, not script).
+        env:
+          FORGE_TEST_ARGS: ${{ inputs.forge-test-args }}
+        run: forge test $FORGE_TEST_ARGS
 
   slither:
     if: ${{ inputs.run-slither }}
@@ -70,4 +78,7 @@ jobs:
           solc-select install 0.8.26 && solc-select use 0.8.26
 
       - name: Run Slither
-        run: slither . --solc-remaps "${{ inputs.slither-remappings }}"
+        # GH-B-005 / DGH-005: slither-remappings via env: (shell data, not script).
+        env:
+          SLITHER_REMAPPINGS: ${{ inputs.slither-remappings }}
+        run: slither . --solc-remaps "$SLITHER_REMAPPINGS"

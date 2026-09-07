@@ -50,9 +50,12 @@ jobs:
           cache-dependency-path: ${{ inputs.working-directory }}/pyproject.toml
 
       - name: Install package
+        # GH-B-005 / DGH-005: install-extra via env: (shell data, not script).
+        env:
+          INSTALL_EXTRA: ${{ inputs.install-extra }}
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[${{ inputs.install-extra }}]"
+          pip install -e ".[${INSTALL_EXTRA}]"
 
       # GH-B-002: `|| echo "... not configured"` swallowed the tool's exit code
       # AND mislabelled a real violation as "not configured". Decide config
@@ -79,7 +82,14 @@ jobs:
           fi
 
       - name: Test
-        run: ${{ inputs.test-command }}
+        # GH-B-005 / DGH-005: test-command is an arbitrary-command primitive by
+        # design (default `pytest -v`), but route it through env: so the caller's
+        # value is not expanded into the script text by the ${{ }} preprocessor
+        # before the shell runs. Callers must not forward untrusted event data
+        # (PR titles, branch names) into this input.
+        env:
+          TEST_COMMAND: ${{ inputs.test-command }}
+        run: $TEST_COMMAND
 
       # GH-B-001 / DGH-001 / FWA-X2: the blocking dependency-CVE gate, re-homed
       # from the inert `workflows/dep-cve-gate.yml` to where the Python code is.

@@ -56,9 +56,17 @@ jobs:
           components: clippy,rustfmt
 
       - name: Install system dependencies
+        # GH-B-005 / DGH-005: pass the caller input through env: so the shell reads
+        # it as data. `${{ inputs.apt-packages }}` spliced straight into run: would
+        # be expanded into the script text before the shell saw it, so a value like
+        # `libssl-dev; curl …|sh` would execute. $APT_PACKAGES is intentionally
+        # unquoted here so a legitimate space-separated package list still splits
+        # into multiple args — but shell metacharacters in it are no longer parsed.
+        env:
+          APT_PACKAGES: ${{ inputs.apt-packages }}
         run: |
           sudo apt-get update
-          sudo apt-get install -y ${{ inputs.apt-packages }}
+          sudo apt-get install -y $APT_PACKAGES
 
       - name: Show toolchain
         run: rustc -Vv && cargo -V
@@ -81,9 +89,11 @@ jobs:
         run: cargo clippy --all-targets --locked -- -D warnings
 
       - name: cargo test
+        # GH-B-005 / DGH-005: test-args via env: so it is shell data, not script.
         env:
           CARGO_INCREMENTAL: 0
-        run: cargo test ${{ inputs.test-args }}
+          TEST_ARGS: ${{ inputs.test-args }}
+        run: cargo test $TEST_ARGS
 
       # GH-B-001 / DGH-001 / FWA-X2: the blocking dependency-CVE gate, re-homed
       # from the inert `workflows/dep-cve-gate.yml` (which hard-coded pre-split

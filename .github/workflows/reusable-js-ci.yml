@@ -52,23 +52,33 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Detect lockfile + install
+        # GH-B-005 / DGH-005: package-manager is later used in COMMAND position
+        # (`$PM run …`), so it is both routed through env: (no ${{ }} script
+        # splicing) AND validated against a fixed allowlist — an unrecognised
+        # value fails loudly instead of silently falling through the branches.
+        env:
+          PM: ${{ inputs.package-manager }}
         run: |
           set -e
-          if [[ "${{ inputs.package-manager }}" == "npm" ]]; then
+          case "$PM" in
+            npm|pnpm|yarn) ;;
+            *) echo "::error::package-manager must be one of: npm | pnpm | yarn (got '$PM')"; exit 1 ;;
+          esac
+          if [[ "$PM" == "npm" ]]; then
             if [[ -f package-lock.json ]]; then
               npm ci
             else
               echo "No package-lock.json — falling back to npm install"
               npm install --no-audit --no-fund
             fi
-          elif [[ "${{ inputs.package-manager }}" == "pnpm" ]]; then
+          elif [[ "$PM" == "pnpm" ]]; then
             npm install -g pnpm
             if [[ -f pnpm-lock.yaml ]]; then
               pnpm install --frozen-lockfile
             else
               pnpm install
             fi
-          elif [[ "${{ inputs.package-manager }}" == "yarn" ]]; then
+          elif [[ "$PM" == "yarn" ]]; then
             if [[ -f yarn.lock ]]; then
               yarn install --frozen-lockfile
             else
@@ -80,33 +90,45 @@ jobs:
       # `lint-script: ''` in its `with:` block — a visible, reviewable choice —
       # never a hidden continue-on-error. A named-but-missing script is an error,
       # not a silent skip (no more "green badge over nothing").
+      # GH-B-005 / DGH-005: script name and package-manager routed through env: and
+      # referenced as quoted shell data; the script name is handed to jq via
+      # --arg (not spliced into the jq filter) so it cannot inject there either.
       - name: Lint
         if: ${{ inputs.lint-script != '' }}
+        env:
+          PM: ${{ inputs.package-manager }}
+          SCRIPT: ${{ inputs.lint-script }}
         run: |
-          if jq -e ".scripts[\"${{ inputs.lint-script }}\"]" package.json > /dev/null; then
-            ${{ inputs.package-manager }} run ${{ inputs.lint-script }}
+          if jq -e --arg s "$SCRIPT" '.scripts[$s]' package.json > /dev/null; then
+            "$PM" run "$SCRIPT"
           else
-            echo "::error::lint-script '${{ inputs.lint-script }}' not found in package.json. Add it, or pass lint-script: '' to opt out."
+            echo "::error::lint-script '$SCRIPT' not found in package.json. Add it, or pass lint-script: '' to opt out."
             exit 1
           fi
 
       - name: Build
         if: ${{ inputs.build-script != '' }}
+        env:
+          PM: ${{ inputs.package-manager }}
+          SCRIPT: ${{ inputs.build-script }}
         run: |
-          if jq -e ".scripts[\"${{ inputs.build-script }}\"]" package.json > /dev/null; then
-            ${{ inputs.package-manager }} run ${{ inputs.build-script }}
+          if jq -e --arg s "$SCRIPT" '.scripts[$s]' package.json > /dev/null; then
+            "$PM" run "$SCRIPT"
           else
-            echo "::error::build-script '${{ inputs.build-script }}' not found in package.json. Add it, or pass build-script: '' to opt out."
+            echo "::error::build-script '$SCRIPT' not found in package.json. Add it, or pass build-script: '' to opt out."
             exit 1
           fi
 
       - name: Test
         if: ${{ inputs.test-script != '' }}
+        env:
+          PM: ${{ inputs.package-manager }}
+          SCRIPT: ${{ inputs.test-script }}
         run: |
-          if jq -e ".scripts[\"${{ inputs.test-script }}\"]" package.json > /dev/null; then
-            ${{ inputs.package-manager }} run ${{ inputs.test-script }}
+          if jq -e --arg s "$SCRIPT" '.scripts[$s]' package.json > /dev/null; then
+            "$PM" run "$SCRIPT"
           else
-            echo "::error::test-script '${{ inputs.test-script }}' not found in package.json. Add tests, or pass test-script: '' to opt out deliberately."
+            echo "::error::test-script '$SCRIPT' not found in package.json. Add tests, or pass test-script: '' to opt out deliberately."
             exit 1
           fi
 
@@ -115,8 +137,10 @@ jobs:
       # Fails on any advisory at high or above against what ships to consumers.
       - name: Dependency audit (blocking, high+)
         if: ${{ inputs.dep-audit }}
+        env:
+          PM: ${{ inputs.package-manager }}
         run: |
-          case "${{ inputs.package-manager }}" in
+          case "$PM" in
             npm)  npm audit --audit-level=high --omit=dev ;;
             pnpm) pnpm audit --audit-level high --prod ;;
             yarn) yarn audit --level high --groups dependencies ;;
