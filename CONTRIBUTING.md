@@ -1,6 +1,30 @@
-# Contributing to the CitrateNetwork
+# Contributing to CitrateNetwork
 
-Default contribution guide for all [CitrateNetwork](https://github.com/CitrateNetwork) repos. Individual repos may layer on additional rules (see each repo's `CONTRIBUTING.md` or `AGENTS.md` if present).
+Default contribution guide for all [CitrateNetwork](https://github.com/CitrateNetwork)
+repos. Individual repos may layer on additional rules (see each repo's `CONTRIBUTING.md`
+or `AGENTS.md` if present). New here? Start with the repo's `README.md`, the
+[federation handbook](https://docs.citrate.ai), and `citrate-docs/LOCAL_STACK.md` to run
+the stack locally.
+
+Citrate is **open-core**: the SDKs, types, docs, and explorer are Apache-2.0; the chain,
+core, and daemons are source-available under BUSL-1.1. Either way, contributions are
+welcome.
+
+## 🍊 Contribute, and your membership is on us
+
+Citrate is meant to be owned by the people who build it. **Land a qualified contribution
+and your membership is free — or refunded if you've already paid** (see
+[citrate.ai](https://citrate.ai) for what membership includes).
+
+- A **qualified contribution** is a **merged pull request that adds real value to a
+  meaningful feature, or resolves an open issue.**
+- Documentation improvements, grammar, and typo fixes are **genuinely welcome and
+  appreciated** — they just don't, on their own, qualify for the membership credit.
+- **How to claim:** once your PR is merged, email **hello@citrate.ai** with a link to it
+  (or note it in the PR). We'll credit a new membership or refund an existing one.
+
+Not sure if an idea qualifies? Open an issue and ask before you build — we're happy to
+tell you up front.
 
 ## Before you start
 
@@ -13,44 +37,41 @@ Default contribution guide for all [CitrateNetwork](https://github.com/CitrateNe
 
 | Aspect | Standard |
 |---|---|
-| Commits | Squash before merge unless multiple atomic logical changes |
-| Commit message | First line < 72 chars, body explains *why* not *what* |
-| Branch name | `<type>/<topic>` — e.g. `fix/dispute-reentrancy`, `feat/agent-cron` |
+| Fork & branch | Fork, branch `<type>/<topic>` (e.g. `fix/dispute-reentrancy`, `feat/agent-cron`) |
+| Commit message | Conventional Commits; first line < 72 chars, body explains *why* not *what* |
 | Tests | Every behavior change needs a test. Bug fixes need a regression test. |
 | CI | Must pass green before review. Don't ping reviewers on red CI. |
-| Reviews | One approving reviewer for Tier-3 repos; two for Tier-1 |
+| Reviews | `main` is protected — every PR needs an approving review (Tier-1 repos: two). No direct pushes. |
 | Linked issue | Reference the issue number in the PR description |
-| Breaking changes | Call them out explicitly in the PR body and CHANGELOG.md |
+| Breaking changes | Call them out explicitly in the PR body and `CHANGELOG.md` |
+| Scope | Keep PRs focused; unrelated changes belong in separate PRs |
 
 ## Conventional commits
 
-We use [Conventional Commits](https://www.conventionalcommits.org/). Common types in this org:
+We use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`,
+`docs:`, `test:`, `ci:`, `chore:`, `refactor:`. For security fixes use `fix(security):`
+and follow `SECURITY.md`.
 
-- `feat:` new feature
-- `fix:` bug fix
-- `docs:` docs only
-- `test:` adding/refactoring tests
-- `ci:` CI/CD changes
-- `chore:` housekeeping
-- `refactor:` no behavior change
+## Developer Certificate of Origin (required)
 
-For security fixes, use `fix(security):` and follow `SECURITY.md`.
+By contributing you agree to the [Developer Certificate of Origin](https://developercertificate.org/):
+you wrote the change or have the right to submit it under the repo's license. **Sign off
+every commit** with `git commit -s` (adds a `Signed-off-by:` line). By submitting, you
+also grant Citrate Inc. a perpetual, worldwide, royalty-free license to use and relicense
+your contribution as part of the Licensed Work (see the repo's `NOTICE` and
+`docs/IP_POLICY.md`). If you're contributing on behalf of an employer, make sure you have
+authorization.
 
-## Sign-off
+## Security
 
-By submitting a PR, you certify that you wrote or have the right to contribute the code under the project's license (BUSL-1.1 unless a repo carries a different LICENSE). We don't require DCO sign-off in every commit, but for substantive changes to Tier-1 repos, a `Signed-off-by:` line is appreciated.
+**Do not open a public issue for a vulnerability.** Email **security@citrate.ai** (see
+`SECURITY.md`). Coordinated disclosure, 90-day window.
 
-## Bringing changes upstream
+## Where to ask
 
-The chain and SDKs may receive forks/clones. If you're upstreaming work from a fork:
+- **GitHub Discussions** on the repo (preferred for code questions).
+- **conduct@citrate.ai** for conduct concerns · **security@citrate.ai** for vulnerabilities.
+- **hello@citrate.ai** for membership / getting involved.
 
-1. Rebase on the latest target branch first.
-2. Open a draft PR early for visibility.
-3. Reference the original branch/repo in the PR description.
-
-## Where to ask questions
-
-- **GitHub Discussions** for that specific repo (preferred for code questions).
-- **Discord** invite in the org README for community/sync conversations.
-- **conduct@citrate.ai** for conduct concerns.
-- **security@citrate.ai** for vulnerabilities (see `SECURITY.md`).
+---
+*Citrate and Citrate OpenWallet are trademarks of Citrate Inc.*
