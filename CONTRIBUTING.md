@@ -6,8 +6,9 @@ or `AGENTS.md` if present). New here? Start with the repo's `README.md`, the
 [federation handbook](https://docs.citrate.ai), and `citrate-docs/LOCAL_STACK.md` to run
 the stack locally.
 
-Citrate is **open-core**: the SDKs, types, docs, and explorer are Apache-2.0; the chain,
-core, and daemons are source-available under BUSL-1.1. Either way, contributions are
+Citrate is **open-core**: the chain & consensus, SDKs, types, docs, explorer, and agent
+runtime are Apache-2.0; the desktop app and the monetized services (inference gateway,
+compute pool, identity) are source-available under BUSL-1.1. Either way, contributions are
 welcome.
 
 ## 🍊 Contribute, and your membership is on us
