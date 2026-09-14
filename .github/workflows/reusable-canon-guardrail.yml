@@ -23,13 +23,13 @@ jobs:
       contents: read
     steps:
       - name: Check out the calling repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # GH-B-003: the fetched foreign script runs against this checkout; do
           # not leave the caller's token in .git/config for it to reach.
           persist-credentials: false
       - name: Fetch the shared guardrail script
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: CitrateNetwork/.github
           # GH-B-003: was `ref: main` — a mutable branch, so any push to this
