@@ -1,0 +1,10 @@
+# Default code owners for CitrateNetwork repositories.
+# Applies where a repo has no CODEOWNERS of its own. A per-repo CODEOWNERS is
+# what makes branch protection's "require review from Code Owners" actually bite —
+# copy this into a repo (root, .github/, or docs/) and tailor per area.
+* @SaulBuilds
+
+# Security-sensitive areas warrant an explicit owner review even as the team grows:
+# /contracts/    @SaulBuilds
+# /consensus/    @SaulBuilds
+# SECURITY.md    @SaulBuilds

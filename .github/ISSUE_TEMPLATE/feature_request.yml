@@ -1,0 +1,34 @@
+name: Feature request
+description: Propose a change or new capability
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposing something non-trivial? Open this first to align on approach before you
+        build — it saves churn, and it's how we confirm whether a contribution would
+        **qualify for the membership credit** (see CONTRIBUTING.md).
+  - type: input
+    id: repo
+    attributes:
+      label: Which repo / component?
+      placeholder: e.g. citrate-sdk-js, citrate-agent-runtime
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do that's hard or impossible today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

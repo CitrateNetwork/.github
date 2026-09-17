@@ -1,0 +1,54 @@
+name: Bug report
+description: Something in a Citrate repo behaves incorrectly
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. **Do not report security vulnerabilities here** —
+        email security@citrate.ai (see SECURITY.md). Coordinated disclosure, 90-day window.
+  - type: input
+    id: repo
+    attributes:
+      label: Which repo / component?
+      placeholder: e.g. citrate-chain, citrate-core, citrate-inference-gateway
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      placeholder: e.g. citrate-core v0.2.3, or a commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. …
+        2. …
+        3. …
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      placeholder: OS, arch, chain id (40204?), node.toml relevant bits, logs
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before filing
+      options:
+        - label: I searched existing issues and this isn't a duplicate
+          required: true
+        - label: This is NOT a security vulnerability (those go to security@citrate.ai)
+          required: true

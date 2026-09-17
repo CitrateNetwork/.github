@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔐 Report a security vulnerability
+    url: mailto:security@citrate.ai
+    about: Never file security issues publicly. Email security@citrate.ai — coordinated disclosure, 90-day window.
+  - name: 💬 Questions & discussion
+    url: https://github.com/orgs/CitrateNetwork/discussions
+    about: For usage questions and design discussion, use Discussions rather than an issue.
+  - name: 📖 Docs (Citrate Atlas)
+    url: https://docs.citrate.ai
+    about: Handbook, SDKs, node guides, and the local stack bring-up.
+  - name: 🍊 Membership & getting involved
+    url: https://citrate.ai
+    about: Contribute a merged PR and your membership is on us — email hello@citrate.ai to claim.
