@@ -8,7 +8,7 @@ This document covers all repositories under the [`CitrateNetwork`](https://githu
 
 Preferred (encrypted, no key exchange): use **GitHub private vulnerability reporting** — on the affected repository, open the **Security** tab → **Report a vulnerability**. This gives a private, GitHub-encrypted channel with no PGP key to fetch.
 
-Alternatively, email **security@citrate.ai**. If you need to encrypt an emailed report, request our current PGP public key at that address, or fetch it from `keys.openpgp.org` for `security@citrate.ai`.
+Alternatively, email **security@citrate.ai**. To encrypt an emailed report, fetch our PGP public key from `keys.openpgp.org` (search `security@citrate.ai`) or via the `Encryption` field of our [`security.txt`](https://citrate.ai/.well-known/security.txt).
 
 > GH-B-012: the previous PGP path pointed at `keys/security@citrate.ai.asc` in the **private** `citrate-monorepo-archive` repo, which no external reporter can read — the documented encryption path did not work. Use private vulnerability reporting instead.
 
@@ -19,6 +19,10 @@ Include in your report:
 - Whether you intend public disclosure on any timeline
 
 We acknowledge within **72 hours** and aim to triage within **5 business days**. For critical vulnerabilities in `citrate-chain` (consensus, execution, on-chain crypto), expect a faster turnaround.
+
+## Bug bounty
+
+Qualifying vulnerabilities are rewarded in the native **SALT** token. Full terms — in-scope repositories, severity-based reward amounts, payout, and eligibility — are published in **`BUG_BOUNTY.md`** in this repository, launching alongside the public release. In short: **zero-day, critical, and high** findings earn fixed SALT awards; **medium** is rewarded at the team's discretion; and all rewards are subject to KYC + sanctions screening and paid at mainnet. Report privately as above — **submissions must stay private through coordinated disclosure to qualify.**
 
 ## Scope
 
