@@ -20,10 +20,6 @@ Include in your report:
 
 We acknowledge within **72 hours** and aim to triage within **5 business days**. For critical vulnerabilities in `citrate-chain` (consensus, execution, on-chain crypto), expect a faster turnaround.
 
-## Bug bounty
-
-Qualifying vulnerabilities are rewarded in the native **SALT** token. Full terms — in-scope repositories, severity-based reward amounts, payout, and eligibility — are published in **`BUG_BOUNTY.md`** in this repository, launching alongside the public release. In short: **zero-day, critical, and high** findings earn fixed SALT awards; **medium** is rewarded at the team's discretion; and all rewards are subject to KYC + sanctions screening and paid at mainnet. Report privately as above — **submissions must stay private through coordinated disclosure to qualify.**
-
 ## Scope
 
 Severity tiers and audit cadence per repo are documented in each repo's `AUDIT_TIER.md`. The TL;DR:
