@@ -6,7 +6,7 @@ contact_links:
   - name: 💬 Questions & discussion
     url: https://github.com/orgs/CitrateNetwork/discussions
     about: For usage questions and design discussion, use Discussions rather than an issue.
-  - name: 📖 Docs (Citrate Atlas)
+  - name: 📖 Docs (Citrate Almanac)
     url: https://docs.citrate.ai
     about: Handbook, SDKs, node guides, and the local stack bring-up.
   - name: 🍊 Membership & getting involved
