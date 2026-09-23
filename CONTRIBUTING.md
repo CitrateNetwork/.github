@@ -27,6 +27,20 @@ and your membership is free — or refunded if you've already paid** (see
 Not sure if an idea qualifies? Open an issue and ask before you build — we're happy to
 tell you up front.
 
+## Set up the whole federation locally (one command)
+
+Every repo lives in one `citrate-labs/` folder so your IDE sees them all as one workspace —
+the same layout the maintainers use. With the [GitHub CLI](https://cli.github.com) authenticated:
+
+```sh
+mkdir -p citrate-labs && cd citrate-labs
+gh repo clone CitrateNetwork/.github
+bash .github/setup.sh          # clone + ⭐ every public repo   ·   `fork` to contribute
+```
+
+Then open the `citrate-labs/` folder in your IDE. The script uses the live public repo list
+(never private repos). Agents: see [`AGENTS.md`](AGENTS.md). Build/audit: `citrate-docs/LOCAL_STACK.md`.
+
 ## Before you start
 
 1. **Skim the repo's README** for what it does and how it builds.
