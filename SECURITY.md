@@ -26,8 +26,10 @@ Severity tiers and audit cadence per repo are documented in each repo's `AUDIT_T
 
 | Tier | Audit policy | Vulnerability handling |
 |---|---|---|
-| **Tier 1** (chain, GUI, SDKs, wallet-extension, agent-runtime, gateway, compute-pool, buyer-webapp, learning-center, boeing-shell, dashboard) | Full audit before every stable release | Coordinated disclosure; CVE assigned for high+ |
-| **Tier 3** (docs, archives, simulation, commercial, compliance) | Content review only | Triage as docs corrections, no CVE |
+| **Tier 1** (chain, native app, SDKs, agent-runtime, gateway, compute-pool) | Full audit before every stable release | Coordinated disclosure; CVE assigned for high+ |
+| **Tier 3** (docs, and other content/library repos) | Content review only | Triage as docs corrections, no CVE |
+
+Per-repo tier is authoritative in each repo's `AUDIT_TIER.md`.
 
 ## Responsible disclosure
 
