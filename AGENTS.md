@@ -42,9 +42,15 @@ Docs: https://docs.citrate.ai · Site: https://citrate.ai · Chain id: **40204**
 - **Docs site:** `cd citrate-docs && npm ci && npm run build`.
 
 ## Conventions (follow these in any change)
-- **Open-core licensing:** Apache-2.0 on the protocol/on-ramps (chain, SDKs, docs, explorer,
-  agent-runtime); BUSL-1.1 on the monetized services/apps (core, gateway, compute-pool,
-  identity, app surfaces). Check each repo's `LICENSE`; don't pull GPL/AGPL deps into either.
+- **Open-core licensing — all launch repos are public today.** Apache-2.0 (open source) on the
+  infrastructure: `citrate-chain`, `citrate-fed-types`, `citrate-node-agent`, `citrate-bundler`,
+  `nat`, `citrate-coop`, `citrate-agent-runtime`, `citrate-sdk-js`, `citrate-sdk-python`,
+  `citrate-sdk-marketplace`, `citrate-docs`, `citrate-explorer`. BUSL-1.1 (source-available;
+  converts to Apache-2.0 on each `LICENSE`'s Change Date) on the application layer / commercial
+  core: `citrate-inference-gateway`, `citrate-compute-pool`, `citrate-cluster`, `citrate-core`,
+  `citrate-comms`, `citrate-quorum`, `citrate-identity`, `citrate-memories`, `citrate-native`,
+  `nist-agent`, `citrate-studio`. The repo's own `LICENSE` file is authoritative; don't pull
+  GPL/AGPL deps into either tier. Licensor: Citrate Inc.
 - **DCO required:** sign every commit — `git commit -s` (adds `Signed-off-by:`).
 - **Conventional Commits**; tests for every behavior change; keep PRs focused.
 - **Branch protection:** `main` needs an approving review (Tier-1 repos: two). CI must be green.

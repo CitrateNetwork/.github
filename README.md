@@ -417,22 +417,25 @@ this complements [`citrate-federation/manifest.toml`](https://github.com/Citrate
 
 ### Licensing and IP
 
-All code, documentation, designs, specifications, and other materials authored by
-Mozi Cooperative and distributed through Citrate-Labs and its federated repositories
-are licensed under the **[Business Source License 1.1](https://github.com/CitrateNetwork/citrate-labs/blob/main/LICENSE)** with the Citrate
-Additional Use Grant.
+Citrate is **open-core**, and every repository's own `LICENSE` file is authoritative:
 
-- **All rights reserved.** Production, commercial, hosted, managed, or
-  revenue-generating use requires a separate written license.
+- **Apache-2.0 (open source)** — the infrastructure tier: `citrate-chain`, `citrate-fed-types`,
+  `citrate-node-agent`, `citrate-bundler`, `nat`, `citrate-coop`, `citrate-agent-runtime`, the SDKs
+  (`citrate-sdk-js`, `citrate-sdk-python`, `citrate-sdk-marketplace`), `citrate-docs`, and `citrate-explorer`.
+- **BUSL-1.1 (source-available)** — the application-layer / commercial-core tier:
+  `citrate-inference-gateway`, `citrate-compute-pool`, `citrate-cluster`, `citrate-core`, `citrate-comms`,
+  `citrate-quorum`, `citrate-identity`, `citrate-memories`, `citrate-native`, `nist-agent`, and
+  `citrate-studio`. Each converts to **Apache-2.0** on the Change Date stated in its `LICENSE`.
+  Production, commercial, hosted, or managed use of a BUSL component before its Change Date requires a
+  separate written license from Citrate Inc.
+
 - **Patent claims** covering consensus, precompile, ZK, agent-harness, and
-  embedded-node designs are filed, pending, or contemplated. See [`PATENTS.md`](https://github.com/CitrateNetwork/citrate-labs/blob/main/PATENTS.md).
-- **Trademarks** (Citrate, Citrate OpenWallet, SALT, Mozi Cooperative) are reserved.
-  See [`TRADEMARK.md`](https://github.com/CitrateNetwork/citrate-labs/blob/main/TRADEMARK.md).
-- **Intellectual property is actively defended.** See [`NOTICE`](https://github.com/CitrateNetwork/citrate-labs/blob/main/NOTICE) and
-  [`docs/IP_POLICY.md`](https://github.com/CitrateNetwork/citrate-labs/blob/main/docs/IP_POLICY.md).
+  embedded-node designs are filed, pending, or contemplated.
+- **Trademarks** (Citrate, Citrate OpenWallet, SALT) are reserved.
+- **Intellectual property is actively defended.**
 
-Commercial, production, institutional, and partnership use inquiries:
-**Partnerships@Citrate.ai**
+Licensor and IP holder: **Citrate Inc.** Commercial, production, institutional, and partnership use
+inquiries: **Partnerships@Citrate.ai**
 
 ### Document index
 

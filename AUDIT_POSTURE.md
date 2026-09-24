@@ -8,7 +8,7 @@ Every repo in the org carries:
 
 | Artifact | Source | Notes |
 |---|---|---|
-| `LICENSE` | Repo root | BUSL-1.1 by default (see citrate-chain/LICENSE for full terms); customer-specific repos may layer on proprietary terms |
+| `LICENSE` | Repo root | Open-core: Apache-2.0 on the infrastructure tier (chain, types, node/bundler, nat, coop, agent-runtime, SDKs, docs, explorer), BUSL-1.1 on the application-layer/core tier (gateway, compute-pool, cluster, core, comms, quorum, identity, memories, native, nist-agent, studio); the repo's own `LICENSE` file is authoritative. Customer-specific repos may layer on proprietary terms |
 | `AUDIT_TIER.md` | Repo root | Tier-1 (full audit) or Tier-3 (content review) classification |
 | `SECURITY.md` | Inherited from this `.github` repo | Repo-specific overrides allowed |
 | `CODE_OF_CONDUCT.md` | Inherited | |

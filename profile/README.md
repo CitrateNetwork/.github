@@ -6,51 +6,50 @@
 
 This GitHub organization hosts the federated repositories that make up the Citrate Network. The codebase was originally developed as a monorepo (now preserved as [`citrate-monorepo-archive`](https://github.com/citratenetwork/citrate-monorepo-archive)) and split in May 2026 to enable per-component release cadences and independent audits.
 
-## Open source and access
+## Open source and licensing
 
-Citrate is built to be open. The whole chain and application layer are open sourced before mainnet, in January 2027. Until then, access to the core is deliberate, and that is a security decision, not secrecy: we research in private and open source a component once it has third-party validation behind it, from auditors or independent researchers.
+Citrate is **open-core**, and the whole chain and application layer are **public today** across this organization.
 
-**Public now** — read and reproduce them: [`nat`](https://github.com/CitrateNetwork/nat) (the model architecture), the American Learning Federation, and [`agentile-skills`](https://github.com/CitrateNetwork/agentile-skills) (the engineering methodology).
+- **Infrastructure — Apache-2.0 (open source).** The chain, node and on-ramp software, the model architecture, the SDKs, the co-op contracts, the docs, and the explorer. Read it, fork it, build on it.
+- **Application layer / commercial core — BUSL-1.1 (source-available).** The inference gateway, compute pool, cluster, node core, comms, quorum, identity, memories, the native app, the NIST agent, and the studio. The source is public and auditable today; each converts to **Apache-2.0** on the Change Date stated in its `LICENSE`.
 
-**Everything else is access-by-request.** Approved contributors receive privileged access to every repository except the private repositories of clients and employees. Request access at [citrate.ai/contact](https://citrate.ai/contact) or email `hello@citrate.ai`. Full policy: [docs.citrate.ai/start/open-source](https://docs.citrate.ai/start/open-source).
+Licensor: **Citrate Inc.** Each repository's `LICENSE` file is authoritative. A small set of **client, enterprise (Homestead), security, and internal** repositories stays private. Enterprise or client access: [citrate.ai/contact](https://citrate.ai/contact) or `hello@citrate.ai`. Full policy: [docs.citrate.ai/start/open-source](https://docs.citrate.ai/start/open-source).
 
 ## Repository index
 
-### Core chain
+### Infrastructure — Apache-2.0 (open source)
 
-- **`citrate-chain`** — The blockchain: consensus, execution, networking, RPC, contracts, node, CLI, wallet. Chain crates publish to crates.io (rollout in progress).
+- **`citrate-chain`** — The L1: GhostDAG consensus, EVM/LVM execution, networking, RPC, contracts, node, CLI, wallet. Chain 40204.
+- **`citrate-fed-types`** — Shared cross-repo type definitions for the federation.
+- **`citrate-node-agent`** — Node supervision, cost-plus bidding, health.
+- **`citrate-bundler`** — ERC-4337 bundler service for embedded wallets.
+- **`nat`** — NAT, the federated neuroarchitectural transformer (model architecture). Memory-safe Rust, formally specified.
+- **`citrate-coop`** — On-chain cooperative ownership and governance contracts.
+- **`citrate-agent-runtime`** — Capability-scoped agent execution runtime + capsules.
+- **`citrate-sdk-js`** — TypeScript SDK (`@citratelabs/sdk`).
+- **`citrate-sdk-python`** — Python SDK.
+- **`citrate-sdk-marketplace`** — Marketplace SDK (metered, pay-per-call inference).
+- **`citrate-docs`** — The Almanac: docs.citrate.ai.
+- **`citrate-explorer`** — CitrateScan, the AI-native BlockDAG explorer.
 
-### Client applications
+### Application layer / commercial core — BUSL-1.1 (source-available, converts to Apache-2.0)
 
-- **`citrate-native`** — light-node desktop wallet and DAG explorer
-- **`citrate-learning-center`** — School pilot desktop application
-- **`citrate-wallet-extension`** — Browser wallet extension
-- **`citrate-buyer-webapp`** — Buyer-side marketplace web application
-- **`citrate-dashboard`** — Network monitoring dashboard
+- **`citrate-inference-gateway`** — x402-metered, pay-per-call AI inference gateway.
+- **`citrate-compute-pool`** — Coordinator + workers for pooled AI training.
+- **`citrate-cluster`** — GPU-fleet and compute-cluster tooling.
+- **`citrate-core`** — Desktop app that turns your machine into a full node.
+- **`citrate-comms`** — End-to-end-encrypted, server-blind team workspace.
+- **`citrate-quorum`** — Human-in-the-loop governance surface for AI.
+- **`citrate-identity`** — OIDC/OAuth2 authority with SIWE and passkeys.
+- **`citrate-memories`** — Content-addressed knowledge graph for agents.
+- **`citrate-native`** — Slint desktop wallet and agent client.
+- **`nist-agent`** — NIST-compliant agent harness, a composable sidecar.
+- **`citrate-studio`** — Native operator control surface.
 
-### Compute and AI infrastructure
+### Methodology and org tooling
 
-- **`citrate-inference-gateway`** — x402-compatible inference gateway
-- **`citrate-compute-pool`** — Training pool coordinator + worker
-- **`citrate-agent-runtime`** — Agent execution runtime + capsules
-
-### SDKs
-
-- **`citrate-sdk-js`** — TypeScript SDK (`@citratelabs/sdk`)
-- **`citrate-sdk-marketplace`** — Marketplace SDK
-- **`citrate-sdk-python`** — Python SDK
-- **`citrate-edu-sdk`** — Learning Center SDK
-
-### Documentation and history
-
-- **`citrate-docs`** — User-facing documentation site
-- **`citrate-agentile-archive`** — Frozen historical record of the Agentile framework, sprint history, ADRs, planset, journals, and audits up to the May 2026 split
-- **`citrate-simulation`** — Network simulation tooling
-
-### Operational
-
-- **`citrate-monorepo-archive`** — Pre-split monorepo, frozen and read-only
-- **`.github`** — This repo: reusable workflows, org-level templates
+- **`agentile`** / **`agentile-skills`** — The institutional methodology for human-agent software, and the same methodology as an installable Claude Code skills marketplace.
+- **`.github`** — This repo: org profile, reusable CI workflows, and `AGENTS.md`.
 
 ## Reusable workflows
 
@@ -76,4 +75,9 @@ jobs:
 
 ## License
 
-Per-repo. See each repo's `LICENSE` file.
+Open-core, per-repo — the `LICENSE` file in each repository is authoritative:
+
+- **Apache-2.0** (infrastructure, open source): `citrate-chain`, `citrate-fed-types`, `citrate-node-agent`, `citrate-bundler`, `nat`, `citrate-coop`, `citrate-agent-runtime`, `citrate-sdk-js`, `citrate-sdk-python`, `citrate-sdk-marketplace`, `citrate-docs`, `citrate-explorer`.
+- **BUSL-1.1** (application layer / commercial core, source-available; converts to Apache-2.0 on each `LICENSE`'s Change Date): `citrate-inference-gateway`, `citrate-compute-pool`, `citrate-cluster`, `citrate-core`, `citrate-comms`, `citrate-quorum`, `citrate-identity`, `citrate-memories`, `citrate-native`, `nist-agent`, `citrate-studio`.
+
+Licensor: **Citrate Inc.**
