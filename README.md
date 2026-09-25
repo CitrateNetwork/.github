@@ -224,10 +224,10 @@ cargo run --release -- --rpc-url http://127.0.0.1:8545
 | Network name | Citrate |
 | Chain ID | `40204` (hex `0x9d0c`) |
 | RPC URL | `https://rpc.citrate.ai` |
-| WebSocket | `wss://ws.citrate.ai` |
+| WebSocket | not publicly served yet (run a local node for `ws://127.0.0.1:8546`) |
 | Block explorer | `https://explorer.citrate.ai` |
 | Faucet | `https://faucet.citrate.ai` |
-| Chain spec | `citrate-chain/specs/testnet.toml` |
+| Chain spec | `citrate-chain/node/config/testnet.toml` |
 
 > Mainnet target is Q2 2027; the current network is chain 40204. Confirm live endpoint
 > status in the [docs](https://docs.citrate.ai) before assuming availability.
@@ -308,12 +308,12 @@ see each repo's README for specifics.
 
 | Repo | What it builds | Run |
 |---|---|---|
-| [`citrate-inference-gateway`](https://github.com/CitrateNetwork/citrate-inference-gateway) | x402-metered inference gateway | `cargo run --release` |
+| [`citrate-inference-gateway`](https://github.com/CitrateNetwork/citrate-inference-gateway) | Inference gateway (paid routes not deployed yet) | `cargo run --release` |
 | [`citrate-compute-pool`](https://github.com/CitrateNetwork/citrate-compute-pool) | Coordinator + workers for pooled training | `cargo run --release` |
 | [`citrate-cluster`](https://github.com/CitrateNetwork/citrate-cluster) | GPU-fleet and compute-cluster tooling | `cargo run --release` |
 | [`citrate-core`](https://github.com/CitrateNetwork/citrate-core) | Desktop app that runs a full node | `cargo run --release` |
 | [`citrate-comms`](https://github.com/CitrateNetwork/citrate-comms) | E2E-encrypted, server-blind team workspace | `pnpm install && pnpm dev` |
-| [`citrate-quorum`](https://github.com/CitrateNetwork/citrate-quorum) | Human-in-the-loop governance surface for AI | `cargo run --release` |
+| [`citrate-quorum`](https://github.com/CitrateNetwork/citrate-quorum) | HIC (Human In Control) governance surface for AI | `cargo run --release` |
 | [`citrate-identity`](https://github.com/CitrateNetwork/citrate-identity) | OIDC/OAuth2 authority (SIWE, passkeys) | `pnpm install && pnpm dev` |
 | [`citrate-memories`](https://github.com/CitrateNetwork/citrate-memories) | Content-addressed knowledge graph for agents | `cargo run --release` |
 | [`citrate-native`](https://github.com/CitrateNetwork/citrate-native) | Slint desktop wallet + agent client | `cargo run --release` |
@@ -454,11 +454,11 @@ on:
 jobs:
   rust:
     if: hashFiles('Cargo.toml') != ''
-    uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@v1   # pin a tag or SHA, not @main
+    uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@5d24169b7acf6533b1eaba2399a25effc6c346d6   # pin a SHA, not @main
 
   js:
     if: hashFiles('package.json') != ''
-    uses: citratenetwork/.github/.github/workflows/reusable-js-ci.yml@v1   # pin a tag or SHA, not @main
+    uses: citratenetwork/.github/.github/workflows/reusable-js-ci.yml@5d24169b7acf6533b1eaba2399a25effc6c346d6   # pin a SHA, not @main
 ```
 
 ### Release notifications
@@ -474,7 +474,7 @@ no diff for a caller's reviewer to see. Pin to a tag or SHA so an upgrade is a
 reviewable change in the caller:
 
 ```yaml
-uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@v1   # or @<40-hex-sha>
+uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@<40-hex-sha>   # no release tags exist yet
 ```
 
 When breaking-change updates are made, cut a new tag here so consumer repos can pin against it.
