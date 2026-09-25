@@ -4,7 +4,7 @@
 
 ## What you'll find here
 
-This GitHub organization hosts the federated repositories that make up the Citrate Network. The codebase was originally developed as a monorepo (now preserved as [`citrate-monorepo-archive`](https://github.com/citratenetwork/citrate-monorepo-archive)) and split in May 2026 to enable per-component release cadences and independent audits.
+This GitHub organization hosts the federated repositories that make up the Citrate Network.
 
 ## Open source and licensing
 
@@ -67,7 +67,7 @@ jobs:
   rust:
     # GH-B-003: pin to a release tag or a full commit SHA, never @main (a mutable
     # branch: one push to this repo would change every caller's CI with no diff).
-    uses: citratenetwork/.github/.github/workflows/reusable-rust-ci.yml@v1
+    uses: CitrateNetwork/.github/.github/workflows/reusable-rust-ci.yml@v1
     with:
       working-directory: '.'
       apt-packages: 'libclang-dev cmake libssl-dev pkg-config libfontconfig1-dev'
