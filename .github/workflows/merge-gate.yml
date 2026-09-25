@@ -90,12 +90,22 @@ jobs:
           deadline=$(( $(date +%s) + 120 * 60 ))
           # Let sibling workflows register their check runs first.
           sleep 30
+          # Per check name, over ALL runs on this commit: wait while any run is
+          # pending; otherwise judge the most recent non-cancelled result. A run
+          # cancelled because a duplicate superseded it is ignored; a check whose
+          # every run was cancelled counts as a failure.
+          summary='[.check_runs[] | select(.name != "ci" and .name != "secret-scan")]
+            | group_by(.name)
+            | map({name: .[0].name,
+                   pending: (map(select(.status != "completed")) | length),
+                   last: (map(select(.status == "completed" and .conclusion != "cancelled"))
+                          | sort_by(.completed_at) | last | .conclusion)})'
           stable=0
           while :; do
-            json=$(gh api "repos/$REPO/commits/$SHA/check-runs?per_page=100&filter=latest")
-            others='[.check_runs[] | select(.name != "ci" and .name != "secret-scan")]'
-            failed=$(jq -r "$others | map(select(.status == \"completed\" and (.conclusion as \$c | [\"failure\",\"cancelled\",\"timed_out\",\"action_required\",\"startup_failure\",\"stale\"] | index(\$c)))) | map(.name) | join(\", \")" <<<"$json")
-            pending=$(jq "$others | map(select(.status != \"completed\")) | length" <<<"$json")
+            json=$(gh api --paginate "repos/$REPO/commits/$SHA/check-runs?per_page=100&filter=all" \
+                     --jq '.check_runs[]' | jq -s '{check_runs: .}')
+            failed=$(jq -r "$summary | map(select(.pending == 0) | select(.last as \$l | \$l == null or ([\"failure\",\"timed_out\",\"action_required\",\"startup_failure\",\"stale\"] | index(\$l) != null))) | map(.name) | join(\", \")" <<<"$json")
+            pending=$(jq "$summary | map(select(.pending > 0)) | length" <<<"$json")
             if [ -n "$failed" ]; then
               echo "::error::failing checks on $SHA: $failed"
               exit 1
