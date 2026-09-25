@@ -93,7 +93,10 @@ def main() -> int:
     bounty = root / "BOUNTY.md"
     sec = root / "SECURITY.md"
     if not bounty.exists():
-        errs.append("BOUNTY.md is missing")
+        # No bounty policy is published yet: nothing may point readers at one.
+        for f in files:
+            if re.search(r"BOUNTY\.md", f.read_text(errors="replace")):
+                errs.append(f"{f.relative_to(root)} links BOUNTY.md, which does not exist yet (bounty policy: coming soon)")
     else:
         b = bounty.read_text()
         for section in ("## In scope", "## Not deployed or not running", "## Safe harbor", "## Known issues", "## Rewards"):
