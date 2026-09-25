@@ -1,0 +1,129 @@
+name: merge-gate
+
+# Real producers for the two required status checks, `ci` and `secret-scan`
+# (2026-09-24 pre-bounty audit, WP R1.3 / PBA-L7-001). Before this file no repo
+# had a job with either name, so no PR could satisfy branch protection and every
+# merge used the admin bypass. Identical in every CitrateNetwork repo.
+#
+#   secret-scan  gitleaks (version + checksum pinned) over the commits this
+#                change introduces, plus the canonical-slug tripwire if present.
+#   ci           waits for every other check run on the head commit (all
+#                workflows) and fails if any failed. One stable context for the
+#                ruleset, however each repo splits its CI across files.
+
+on:
+  pull_request: {}
+  push:
+    branches: [main]
+  merge_group: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: merge-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: secret-scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install gitleaks (version + checksum pinned)
+        env:
+          GL_VERSION: 8.30.1
+          GL_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+        run: |
+          set -euo pipefail
+          tarball="gitleaks_${GL_VERSION}_linux_x64.tar.gz"
+          curl -sSfL --proto '=https' --tlsv1.2 -o "$RUNNER_TEMP/$tarball" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GL_VERSION}/${tarball}"
+          echo "${GL_SHA256}  $RUNNER_TEMP/${tarball}" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$tarball" -C "$RUNNER_TEMP" gitleaks
+
+      - name: Scan the commits this change introduces
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          MQ_BASE: ${{ github.event.merge_group.base_sha }}
+        run: |
+          set -euo pipefail
+          zero=0000000000000000000000000000000000000000
+          case "$EVENT" in
+            pull_request) range="$PR_BASE..HEAD" ;;
+            merge_group)  range="$MQ_BASE..HEAD" ;;
+            *) if [ -n "$PUSH_BEFORE" ] && [ "$PUSH_BEFORE" != "$zero" ]; then range="$PUSH_BEFORE..HEAD"; else range="HEAD~1..HEAD"; fi ;;
+          esac
+          cfg=()
+          if [ -f .gitleaks.toml ]; then cfg=(--config .gitleaks.toml); fi
+          "$RUNNER_TEMP/gitleaks" git . "${cfg[@]}" --log-opts="$range" --redact --no-banner
+
+      - name: Canonical GitHub slugs (if the repo carries the tripwire)
+        run: |
+          set -euo pipefail
+          if [ -f scripts/check-canonical-slugs.sh ]; then bash scripts/check-canonical-slugs.sh .; fi
+          if [ -f scripts/tests/test_canonical_github_slugs.sh ]; then bash scripts/tests/test_canonical_github_slugs.sh .; fi
+
+  ci:
+    name: ci
+    needs: secret-scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 130
+    permissions:
+      contents: read
+      checks: read
+    steps:
+      - name: Wait for every other check on this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          deadline=$(( $(date +%s) + 120 * 60 ))
+          # Let sibling workflows register their check runs first.
+          sleep 30
+          # Per check name, over ALL runs on this commit: wait while any run is
+          # pending; otherwise judge the most recent non-cancelled result. A run
+          # cancelled because a duplicate superseded it is ignored; a check whose
+          # every run was cancelled counts as a failure.
+          summary='[.check_runs[] | select(.name != "ci" and .name != "secret-scan")]
+            | group_by(.name)
+            | map({name: .[0].name,
+                   pending: (map(select(.status != "completed")) | length),
+                   last: (map(select(.status == "completed" and .conclusion != "cancelled"))
+                          | sort_by(.completed_at) | last | .conclusion)})'
+          stable=0
+          while :; do
+            json=$(gh api --paginate "repos/$REPO/commits/$SHA/check-runs?per_page=100&filter=all" \
+                     --jq '.check_runs[]' | jq -s '{check_runs: .}')
+            failed=$(jq -r "$summary | map(select(.pending == 0) | select(.last as \$l | \$l == null or ([\"failure\",\"timed_out\",\"action_required\",\"startup_failure\",\"stale\"] | index(\$l) != null))) | map(.name) | join(\", \")" <<<"$json")
+            pending=$(jq "$summary | map(select(.pending > 0)) | length" <<<"$json")
+            if [ -n "$failed" ]; then
+              echo "::error::failing checks on $SHA: $failed"
+              exit 1
+            fi
+            if [ "$pending" -eq 0 ]; then
+              stable=$((stable + 1))
+              # Two consecutive quiet polls: nothing late-registering.
+              if [ "$stable" -ge 2 ]; then
+                echo "All other checks on $SHA completed without failure."
+                exit 0
+              fi
+            else
+              stable=0
+              echo "waiting on $pending check(s)..."
+            fi
+            if [ "$(date +%s)" -gt "$deadline" ]; then
+              echo "::error::timed out waiting for checks on $SHA"
+              exit 1
+            fi
+            sleep 30
+          done
