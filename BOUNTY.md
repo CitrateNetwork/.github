@@ -78,7 +78,7 @@ A code-level flaw in them is accepted as a low-priority design finding, not a li
 |---|---|
 | Checkpoint finality (committee of 100, quorum 67) | Specified, not running. Confirmation is probabilistic (see `verification/claims.json` in citrate-chain) |
 | Stake-gated proposer eligibility and a multi-producer validator set | Staged: off by default, enabled when a validator registry is configured. The testnet runs a single block producer operated by Citrate |
-| Inference gateway paid routes (x402 and API-key metering) | Not mounted by the gateway binary; not deployed |
+| Inference gateway paid routes (x402 and API-key metering) | Not deployed |
 | Membership x402 endpoint | Not configured; not deployed |
 | SALT bridge | Specified, not deployed |
 | The 19 governance and cooperative contracts with no code on 40204 (AnchorRegistry, MeetingRegistry, GovernanceTemplateRegistry, GovernanceProtocolFactory, PolicyBinding, CapabilityGrant, VoteAllowance, Sortition, PatronageLedger, ModelCooperative, FacilitySBTImpl, NetworkSBTImpl, FacilitySBT, NetworkSBT, CitrateCooperativeFactory, CoopDeployer, CoopMembershipSBT, ContributionRewardPool, CoopGovernor) | In the address book, not deployed |

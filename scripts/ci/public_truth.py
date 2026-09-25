@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Public-truth check for the org profile, README and security policy (PBA-L8).
+"""Public-truth check for the org profile, README and security policy (public-claims accuracy).
 
 Text is normalised before matching (line breaks and runs of whitespace collapse to one
 space, a hyphen split across a line break is joined, markdown emphasis is dropped), so a
@@ -42,10 +42,10 @@ RULES: list[tuple[str, re.Pattern, re.Pattern | None]] = [
     ("no PGP key is published for security@citrate.ai",
      re.compile(r"keys\s*\.\s*openpgp\s*\.\s*org|PGP (public )?key (from|at|via)", re.I), None),
     ("overstated supply-chain claim",
-     re.compile(r"(cosign[- ]signed|signed (via|with) cosign|SBOMs? \(?CycloneDX\)? attach|every (tier-1 )?release (ships|carries|includes|has)|CVE assigned for high)", re.I),
-     re.compile(r"in progress|once published|built to|not yet|no public release", re.I)),
+     re.compile(r"(\b(are|is) cosign[- ]signed|cosign[- ]signed (releases|crates|artifacts)|signed (via|with) cosign|SBOMs? \(?CycloneDX\)? attach|every (tier-1 )?release (ships|carries|includes|has)|CVE assigned for high)", re.I),
+     re.compile(r"^.{0,25}(built to|once published|not yet|no public release|in progress)", re.I)),
     ("paid inference rails described as live (not deployed)",
-     re.compile(r"(x402|pay" + DASH + r"per" + DASH + r"call)[^.|]{0,80}\b(live|available now|today|metered)\b|x402-metered", re.I),
+     re.compile(r"(x402|pay" + DASH + r"per" + DASH + r"call|paid (inference|routes|calls))[^.|]{0,80}\b(live|available now|today|metered|generally available|in production)\b|x402-metered", re.I),
      re.compile(r"not (yet )?(deployed|live|mounted)", re.I)),
     ("names an audit finding ID; public copy must not describe open findings",
      re.compile(r"\bPBA-[A-Za-z0-9]+-\d+\b"), None),
@@ -77,8 +77,10 @@ def main() -> int:
                 m = rx.search(s)
                 if not m:
                     continue
-                if qual is not None and qual.search(s):
-                    continue
+                if qual is not None:
+                    window = s[max(0, m.start() - 40): m.end() + 40]
+                    if re.search(r"not (yet )?(deployed|live|mounted)|built to|once published|not yet|no public release", window, re.I) and not re.search(r"\bare cosign|\bis cosign", s[m.start():m.end()], re.I):
+                        continue
                 errs.append(f"{rel}: {label}: ...{s[max(0, m.start() - 40):m.end() + 60]}...")
 
     # Reusable-workflow pins must resolve.
@@ -98,10 +100,13 @@ def main() -> int:
             if section not in b:
                 errs.append(f"BOUNTY.md lacks section '{section}'")
         ki = b.split("## Known issues", 1)[-1].split("\n## ", 1)[0]
-        if re.search(r"^\s*[-*|]\s", ki, re.M):
+        body = re.sub(r"\s+", " ", ki).strip()
+        if re.search(r"^\s*([-*|]|\d+[.)])\s", ki, re.M) or body not in ("Published per finding once fixed. `OWNER TO FILL`.",):
             errs.append("BOUNTY.md Known issues must stay a placeholder until each finding is fixed and the owner publishes it")
-        if "not in force" in b and sec.exists() and "BOUNTY.md" in sec.read_text():
-            errs.append("SECURITY.md links BOUNTY.md while BOUNTY.md is marked not in force (counsel sign-off pending)")
+        if "not in force" in b:
+            for f in files:
+                if f.name != "BOUNTY.md" and re.search(r"BOUNTY\.md", f.read_text(errors="replace")):
+                    errs.append(f"{f.relative_to(root)} links BOUNTY.md while BOUNTY.md is marked not in force (counsel sign-off pending)")
 
     for e in errs:
         print(f"::error::public-truth: {e}")

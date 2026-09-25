@@ -66,7 +66,7 @@ Federation-wide audit history is summarized below. Individual audit reports live
 | Date | Auditor | Scope | Outcome |
 |---|---|---|---|
 | Pre-split | internal | Monorepo as of 2026-05-17 | Private archive, not public |
-| 2026-09-24 | internal adversarial audit (pre-bounty) | Federation, public repos and live testnet | Findings under remediation; see [`BOUNTY.md`](BOUNTY.md) known issues |
+| 2026-09-24 | internal adversarial audit (pre-bounty) | Federation, public repos and live testnet | Remediation in progress |
 | Planned: Q3 2026 | TBD | `citrate-chain` Tier-1 pass before `v0.5.0` stable | — |
 
 ## Changelog of this document

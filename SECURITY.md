@@ -33,7 +33,7 @@ below is the same table that appears on the [security posture page](https://docs
 A repository's own `AUDIT_TIER.md` is authoritative for that repository. A public repository without an
 `AUDIT_TIER.md` is handled as Tier 1 for reports.
 
-No advisories have been published yet. The first will follow the fixes from the 2026-09 pre-bounty audit.
+No advisories have been published yet.
 
 ## Responsible disclosure
 
