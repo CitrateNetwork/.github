@@ -1,0 +1,7 @@
+Contact: security@citrate.ai
+
+Encryption: https://citrate.ai/keys/security-pgp.asc
+
+Preferred-Languages: en
+
+Canonical: https://citrate.ai/.well-known/security.txt
