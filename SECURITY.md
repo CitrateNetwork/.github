@@ -8,9 +8,9 @@ This document covers all repositories under the [`CitrateNetwork`](https://githu
 
 Preferred (encrypted, no key exchange): use **GitHub private vulnerability reporting** — on the affected repository, open the **Security** tab → **Report a vulnerability**. This gives a private, GitHub-encrypted channel with no PGP key to fetch.
 
-Alternatively, email **security@citrate.ai**. To encrypt an emailed report, fetch our PGP public key from `keys.openpgp.org` (search `security@citrate.ai`) or via the `Encryption` field of our [`security.txt`](https://citrate.ai/.well-known/security.txt).
+Alternatively, email **security@citrate.ai**. We do not publish a PGP key yet, so send sensitive details through private vulnerability reporting rather than plain email. Our [`security.txt`](https://citrate.ai/.well-known/security.txt) lists the same contacts.
 
-> GH-B-012: the previous PGP path pointed at `keys/security@citrate.ai.asc` in the **private** `citrate-monorepo-archive` repo, which no external reporter can read — the documented encryption path did not work. Use private vulnerability reporting instead.
+Bounty policy: coming soon. It will be linked here once counsel has reviewed it (OWNER).
 
 Include in your report:
 - The repo + commit SHA (or version tag) where you observed the issue
@@ -22,14 +22,18 @@ We acknowledge within **72 hours** and aim to triage within **5 business days**.
 
 ## Scope
 
-Severity tiers and audit cadence per repo are documented in each repo's `AUDIT_TIER.md`. The TL;DR:
+Severity tiers and audit cadence per repo are documented in each repo's `AUDIT_TIER.md`. The summary
+below is the same table that appears on the [security posture page](https://docs.citrate.ai/security/posture).
 
-| Tier | Audit policy | Vulnerability handling |
-|---|---|---|
-| **Tier 1** (chain, native app, SDKs, agent-runtime, gateway, compute-pool) | Full audit before every stable release | Coordinated disclosure; CVE assigned for high+ |
-| **Tier 3** (docs, and other content/library repos) | Content review only | Triage as docs corrections, no CVE |
+| Tier | Repositories | Audit policy | Vulnerability handling |
+|---|---|---|---|
+| **Tier 1**: consensus, value, keys, identity | `citrate-chain` (node, contracts, ZK), `citrate-core`, `citrate-identity`, `citrate-inference-gateway`, `citrate-compute-pool`, `citrate-coop`, `citrate-agent-runtime`, `citrate-sdk-js`, `citrate-sdk-python` | Full adversarial audit before every stable release | Coordinated disclosure; a GitHub Security Advisory (with a CVE request) for fixed High and Critical issues in released code |
+| **Tier 3**: docs and content | `citrate-docs`, `.github`, and other content-only repositories | Content review | Triage as documentation corrections, no CVE |
 
-Per-repo tier is authoritative in each repo's `AUDIT_TIER.md`.
+A repository's own `AUDIT_TIER.md` is authoritative for that repository. A public repository without an
+`AUDIT_TIER.md` is handled as Tier 1 for reports.
+
+No advisories have been published yet. The first will follow the fixes from the 2026-09 pre-bounty audit.
 
 ## Responsible disclosure
 
@@ -53,13 +57,13 @@ We will **not** pursue legal action against researchers who:
 - Social engineering of team members.
 - Physical access attacks against operator hardware.
 
-## Supply-chain integrity
+## Supply-chain integrity (current practice)
 
-- Crates published from `citrate-chain` are signed via cosign keyless OIDC. See the chain's `.github/workflows/release.yml` for the signing pipeline.
-- npm packages from `citrate-sdk-*` are published with provenance attestations.
-- SBOMs (CycloneDX) attach to every Tier-1 release.
+- `citrate-chain`'s release workflow is built to sign artifacts with cosign (keyless OIDC) and attach CycloneDX SBOMs, but no public release carries signed assets yet: the signed `v0.5.0-beta2-tier2` build is still a draft. Treat current prereleases, including the `citrate-core` desktop builds, as unsigned and without SBOMs.
+- `@citratelabs/sdk` on npm is published with a provenance attestation. `@citratelabs/marketplace-sdk` is not yet.
+- Supply-chain hardening is in progress: required review and CI checks on every public repository, third-party GitHub Actions pinned to commit SHAs, and signed releases with SBOMs.
 
-Verifying a release artifact:
+Verifying a signed release artifact, once published:
 
 ```bash
 # cosign verify-blob with the issuer / identity from the release
@@ -71,7 +75,7 @@ cosign verify-blob --certificate-identity-regexp 'https://github\.com/CitrateNet
 
 ## Audit firms + history
 
-Per-repo audit history lives in each repo's `audits/` directory (when present) or in the [`citrate-monorepo-archive`](https://github.com/CitrateNetwork/citrate-monorepo-archive) for pre-split history. The next planned audit is the chain Tier-1 pass before the `v0.5.0` stable tag.
+Per-repo audit history lives in each repo's `audits/` directory, when present. History from before the repositories were split is kept in a private archive and is not public. No external-firm audit has been completed yet; the next planned audit is the chain Tier-1 pass before the `v0.5.0` stable tag.
 
 ## Contact
 

@@ -61,11 +61,12 @@ See [`SECURITY.md`](SECURITY.md). All Tier-1 repos must include a `SECURITY.md` 
 
 ## Audit history
 
-Federation-wide audit history is summarized below. Individual audit reports live in each repo's `audits/` directory; pre-split audit reports live in [`citrate-monorepo-archive`](https://github.com/CitrateNetwork/citrate-monorepo-archive)'s `audits/`.
+Federation-wide audit history is summarized below. Individual audit reports live in each repo's `audits/` directory. Pre-split audit reports are kept in a private archive and are not public.
 
 | Date | Auditor | Scope | Outcome |
 |---|---|---|---|
-| Pre-split | various | Monorepo as of 2026-05-17 | See archive `audits/` |
+| Pre-split | internal | Monorepo as of 2026-05-17 | Private archive, not public |
+| 2026-09-24 | internal adversarial audit (pre-bounty) | Federation, public repos and live testnet | Findings under remediation; see [`BOUNTY.md`](BOUNTY.md) known issues |
 | Planned: Q3 2026 | TBD | `citrate-chain` Tier-1 pass before `v0.5.0` stable | — |
 
 ## Changelog of this document
