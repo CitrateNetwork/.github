@@ -28,3 +28,5 @@ jobs:
         run: bash scripts/ci/workflow-guardrails.sh .
       - name: Canon-guardrail regression suite
         run: bash scripts/test-canon-guardrail.sh
+      - name: Public-truth check (public-claims accuracy)
+        run: bash scripts/ci/public-truth.sh .

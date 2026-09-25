@@ -28,18 +28,18 @@ Licensor: **Citrate Inc.** Each repository's `LICENSE` file is authoritative. A 
 - **`citrate-agent-runtime`** — Capability-scoped agent execution runtime + capsules.
 - **`citrate-sdk-js`** — TypeScript SDK (`@citratelabs/sdk`).
 - **`citrate-sdk-python`** — Python SDK.
-- **`citrate-sdk-marketplace`** — Marketplace SDK (metered, pay-per-call inference).
+- **`citrate-sdk-marketplace`**: Marketplace SDK (metered inference; the paid rails are not deployed yet).
 - **`citrate-docs`** — The Almanac: docs.citrate.ai.
 - **`citrate-explorer`** — CitrateScan, the AI-native BlockDAG explorer.
 
 ### Application layer / commercial core — BUSL-1.1 (source-available, converts to Apache-2.0)
 
-- **`citrate-inference-gateway`** — x402-metered, pay-per-call AI inference gateway.
+- **`citrate-inference-gateway`**: AI inference gateway. Paid calls (x402 and API-key metering) are not deployed yet.
 - **`citrate-compute-pool`** — Coordinator + workers for pooled AI training.
 - **`citrate-cluster`** — GPU-fleet and compute-cluster tooling.
 - **`citrate-core`** — Desktop app that turns your machine into a full node.
 - **`citrate-comms`** — End-to-end-encrypted, server-blind team workspace.
-- **`citrate-quorum`** — Human-in-the-loop governance surface for AI.
+- **`citrate-quorum`**: HIC (Human In Control) governance surface for AI.
 - **`citrate-identity`** — OIDC/OAuth2 authority with SIWE and passkeys.
 - **`citrate-memories`** — Content-addressed knowledge graph for agents.
 - **`citrate-native`** — Slint desktop wallet and agent client.
@@ -65,9 +65,10 @@ Usage in any repo's `.github/workflows/ci.yml`:
 ```yaml
 jobs:
   rust:
-    # GH-B-003: pin to a release tag or a full commit SHA, never @main (a mutable
-    # branch: one push to this repo would change every caller's CI with no diff).
-    uses: CitrateNetwork/.github/.github/workflows/reusable-rust-ci.yml@v1
+    # GH-B-003: pin to a full commit SHA, never @main (a mutable branch: one push
+    # to this repo would change every caller's CI with no diff). This repo has no
+    # release tags yet, so @v1 does not resolve; use a reviewed commit SHA.
+    uses: CitrateNetwork/.github/.github/workflows/reusable-rust-ci.yml@5d24169b7acf6533b1eaba2399a25effc6c346d6
     with:
       working-directory: '.'
       apt-packages: 'libclang-dev cmake libssl-dev pkg-config libfontconfig1-dev'
