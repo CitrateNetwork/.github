@@ -26,6 +26,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Run workflow-guardrails
         run: bash scripts/ci/workflow-guardrails.sh .
+      - name: Workflow policy pins + guardrail negative controls
+        run: python3 -m unittest discover -s scripts/ci -p 'test_*.py' -v
       - name: Canon-guardrail regression suite
         run: bash scripts/test-canon-guardrail.sh
       - name: Public-truth check (public-claims accuracy)
